@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "679204649530",
+    "project_id": "binge-read-2326",
+    "storage_bucket": "binge-read-2326.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679204649530:android:52dfb2e440218677041303",
+        "android_client_info": {
+          "package_name": "com.example.binge_read"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679204649530-fd4u4g3813ub7espt75begacq21slt4v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABGakp2AFyrA3HBfNLkFI1FzDKJyuDBrM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679204649530-fd4u4g3813ub7espt75begacq21slt4v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
