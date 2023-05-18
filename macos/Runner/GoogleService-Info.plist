@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>679204649530-gv7nhsek5t5am5joq74l0qh493i3d5jd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.679204649530-gv7nhsek5t5am5joq74l0qh493i3d5jd</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAW5NdKiYt4ntr3Y8S5y7hesBkh_DcdQbI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>679204649530</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.bingeRead</string>
+	<key>PROJECT_ID</key>
+	<string>binge-read-2326</string>
+	<key>STORAGE_BUCKET</key>
+	<string>binge-read-2326.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:679204649530:ios:9a0de693c3c70366041303</string>
+</dict>
+</plist>

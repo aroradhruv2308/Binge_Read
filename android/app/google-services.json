@@ -29,6 +29,13 @@
             {
               "client_id": "679204649530-fd4u4g3813ub7espt75begacq21slt4v.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "679204649530-gv7nhsek5t5am5joq74l0qh493i3d5jd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bingeRead"
+              }
             }
           ]
         }

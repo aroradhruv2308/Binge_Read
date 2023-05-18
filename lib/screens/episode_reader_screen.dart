@@ -1,3 +1,4 @@
+import 'package:binge_read/components/custom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
@@ -30,6 +31,12 @@ class _MyHtmlScreenState extends State<MyHtmlScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+          bottomNavigationBar: BottomNavBar(
+            selectedIndex: 0,
+            onItemTapped: (int selectedIndex) {
+              print(selectedIndex);
+            },
+          ),
           appBar: AppBar(
             title: Text('HTML Screen'),
           ),

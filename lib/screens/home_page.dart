@@ -1,4 +1,8 @@
+import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
+import 'package:binge_read/components/custom_appbar.dart';
+import 'package:binge_read/components/home_page_content.dart';
+import 'package:binge_read/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -20,23 +24,63 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 2), () {
+      homeScreenBloc.add(RemoveSplashScreenEvent());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Firestore Test'),
-      ),
       body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
         bloc: homeScreenBloc,
         builder: (context, state) {
           if (state is HomeScreenInitial) {
-            return Container(
-              color: Colors.blueAccent,
-              child: Center(child: Text("Splash Screen")),
-            );
+            return SplashScreen();
           }
-          return Container(
-            color: Colors.redAccent,
-            child: Center(child: Text("Home Screen")),
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 30, 8, 0),
+                child: CustomAppBar(
+                  trailingElement: "notification",
+                  middleElement: "nameOfAPP",
+                  leadingElement: "hambarOpenIcon",
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.greyColor),
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.white,
+                  ),
+                  child: const Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.search, color: Colors.grey),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Search Your Series..',
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              HomePageContent()
+            ],
           );
         },
       ),

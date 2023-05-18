@@ -43,6 +43,7 @@ dependencies:
   flutter_widget_from_html: ^0.10.0
   http: ^0.13.6
   webview_flutter: ^4.2.0
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
