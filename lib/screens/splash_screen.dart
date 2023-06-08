@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Text("BINGE READ",
           style: TextStyle(
             color: AppColors.primaryColor,
-            fontSize: SizeConstants.heading1,
+            fontSize: SizeConstants.twentyFourPixel,
           )),
     );
   }

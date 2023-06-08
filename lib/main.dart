@@ -1,9 +1,10 @@
 import 'package:binge_read/firebase_options.dart';
 import 'package:binge_read/screens/episode_reader_screen.dart';
-import 'package:binge_read/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+
+import 'screens/build_screen.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      // home: MainScreen(index: 0),
+      home: MyHtmlScreen(),
     );
   }
 }

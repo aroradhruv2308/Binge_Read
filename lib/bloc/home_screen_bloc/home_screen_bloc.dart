@@ -11,5 +11,13 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       final state = RemoveSplashScreenState();
       emit(state);
     });
+    on<ShowShimmerEvent>((event, emit) {
+      final state = ShowShimmerState();
+      emit(state);
+    });
+    on<InitialEvent>((event, emit) {
+      final state = HomeScreenInitial();
+      emit(state);
+    });
   }
 }

@@ -2,10 +2,8 @@ import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
 import 'package:binge_read/components/custom_appbar.dart';
 import 'package:binge_read/components/home_page_content.dart';
-import 'package:binge_read/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,31 +24,26 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      homeScreenBloc.add(RemoveSplashScreenEvent());
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
         bloc: homeScreenBloc,
         builder: (context, state) {
-          if (state is HomeScreenInitial) {
-            return SplashScreen();
-          }
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 30, 8, 0),
+                padding: const EdgeInsets.fromLTRB(0.0, 40, 0, 0),
                 child: CustomAppBar(
                   trailingElement: "notification",
                   middleElement: "nameOfAPP",
                   leadingElement: "hambarOpenIcon",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
@@ -79,7 +72,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              HomePageContent()
+              Expanded(
+                  child: HomePageContent(
+                homeScreenBloc: homeScreenBloc,
+              ))
             ],
           );
         },

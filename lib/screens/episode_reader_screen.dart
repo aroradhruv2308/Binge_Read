@@ -1,13 +1,16 @@
-import 'package:binge_read/components/custom_navbar.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as parser;
+import 'package:html/dom.dart' as dom;
+import 'package:html/parser.dart' as htmlparser;
+import 'package:selectable/selectable.dart';
 
 class MyHtmlScreen extends StatefulWidget {
   MyHtmlScreen();
+  dom.Document htmlDocument = dom.Document();
   String link =
-      "https://firebasestorage.googleapis.com/v0/b/binge-read-2326.appspot.com/o/Episode3.html?alt=media&token=82331269-ebd1-4a14-a326-8ad4546ba770";
+      "https://firebasestorage.googleapis.com/v0/b/binge-read-2326.appspot.com/o/HTMLFiles%2Foutput.html?alt=media&token=9662d1c2-9bd8-40df-a108-525663f03eb3&_gl=1*cb541j*_ga*MTk3MzUxMjgwLjE2ODMxMzA1NzA.*_ga_CW55HF8NVT*MTY4NjA3MTQzMi4xNS4xLjE2ODYwNzE5NTIuMC4wLjA.";
   @override
   State<MyHtmlScreen> createState() => _MyHtmlScreenState();
 }
@@ -15,43 +18,48 @@ class MyHtmlScreen extends StatefulWidget {
 class _MyHtmlScreenState extends State<MyHtmlScreen> {
   Future<String> getHtmlStringFromFirebaseStorage(String url) async {
     final response = await http.get(Uri.parse(url));
-    final document = parser.parse(response.body);
+    final document = htmlparser.parse(response.bodyBytes, encoding: 'utf-8');
+    widget.htmlDocument = document;
     return document.outerHtml;
   }
 
   Future<String>? _htmlContent;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _htmlContent = getHtmlStringFromFirebaseStorage(widget.link);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          bottomNavigationBar: BottomNavBar(
-            selectedIndex: 0,
-            onItemTapped: (int selectedIndex) {
-              print(selectedIndex);
-            },
-          ),
-          appBar: AppBar(
-            title: Text('HTML Screen'),
-          ),
-          body: FutureBuilder<String>(
-            future: _htmlContent,
-            builder: (context, snapshot) {
-              print(snapshot.data);
-
-              return SingleChildScrollView(
-                  child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: HtmlWidget(snapshot.data.toString()),
-              ));
-            },
-          )),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Html Screen"),
+      ),
+      body: FutureBuilder<String>(
+        future: _htmlContent,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error loading HTML content'));
+          } else {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                child: Selectable(
+                  selectWordOnDoubleTap: true,
+                  child: HtmlWidget(
+                    snapshot.data!,
+                    // Enable JavaScript execution in web view
+                  ),
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

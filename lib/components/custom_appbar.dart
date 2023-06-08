@@ -20,33 +20,45 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              border: Border.all(color: AppColors.greyColor),
-              shape: BoxShape.circle),
-          child: const Icon(
-            Icons.menu_rounded,
-            color: AppColors.darkGreyColor,
+        Expanded(
+            flex: 2,
+            child: Container(
+              width:
+                  60, // Adjust the width and height according to your preference
+              height: 60,
+              decoration: BoxDecoration(
+                color: Colors.cyan,
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage('images/anime_avatar2.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )),
+        // Add spacing between elements
+        Expanded(
+          flex: 6,
+          child: const Text(
+            'Hello Reader',
+            style: TextStyle(
+                fontSize: SizeConstants.twentyTwoPixel,
+                fontFamily: 'Lexend',
+                fontWeight: FontWeight.bold,
+                color: AppColors.whiteColor),
           ),
-        ), // Add spacing between elements
-        const Text(
-          'App Title',
-          style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: AppColors.darkGreyColor),
         ),
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              border: Border.all(color: AppColors.greyColor),
-              shape: BoxShape.circle),
-          child: const Icon(
-            Icons.notifications_rounded,
-            color: AppColors.darkGreyColor,
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+                border: Border.all(color: AppColors.glowGreen),
+                shape: BoxShape.circle),
+            child: const Icon(
+              Icons.notifications_rounded,
+              color: AppColors.glowGreen,
+            ),
           ),
         ),
       ],

@@ -12,3 +12,8 @@ class RemoveSplashScreenState extends HomeScreenState {
   @override
   List<Object?> get props => [];
 }
+
+class ShowShimmerState extends HomeScreenState {
+  @override
+  List<Object?> get props => [];
+}
