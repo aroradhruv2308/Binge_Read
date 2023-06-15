@@ -1,6 +1,7 @@
 import 'package:binge_read/components/custom_navbar.dart';
 import 'package:binge_read/screens/explore_screen.dart';
 import 'package:binge_read/screens/home_page.dart';
+import 'package:binge_read/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
         screen = Container();
         break;
       default:
-        screen = Container();
+        screen = ProfileScreen();
         break;
     }
 

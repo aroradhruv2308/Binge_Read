@@ -333,6 +333,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                     if (state is ShowSeasonEpisodesState) {
                       currentSeason = state.seasonNumber ?? 1;
                     }
+                    delailScreenBloc.add(ResetEvent());
                     return FutureBuilder<List<Episode>>(
                       future: fetchEpisodes(
                           seriesId: widget.seriesId,

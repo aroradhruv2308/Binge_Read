@@ -215,8 +215,10 @@ Widget episodeCard({required String episodeName, required int episodeNumber, req
     backgroundColor: AppColors.navBarColor,
     collapsedBackgroundColor: AppColors.navBarColor,
     expandedAlignment: Alignment.topCenter,
+    textColor: AppColors.glowGreen,
     collapsedIconColor: AppColors.greyColor,
     iconColor: AppColors.glowGreen,
+    collapsedTextColor: AppColors.whiteColor,
     trailing: IconButton(
       iconSize: 16,
       icon: Icon(Icons.arrow_forward_ios),
@@ -226,11 +228,11 @@ Widget episodeCard({required String episodeName, required int episodeNumber, req
     title: Text(
       "Episode $episodeNumber : $episodeName",
       style: const TextStyle(
-          overflow: TextOverflow.ellipsis,
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Lexend',
-          color: AppColors.whiteColor),
+        overflow: TextOverflow.ellipsis,
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Lexend',
+      ),
     ),
     children: <Widget>[
       ListTile(

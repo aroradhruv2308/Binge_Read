@@ -52,6 +52,7 @@ class _MyHtmlScreenState extends State<MyHtmlScreen> {
                   selectWordOnDoubleTap: true,
                   child: HtmlWidget(
                     snapshot.data!,
+                    textStyle: TextStyle(fontFamily: 'Lexend'),
                     // Enable JavaScript execution in web view
                   ),
                 ),
