@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
     // Once the future has completed successfully
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: MainScreen(index: 0),
-      home: MyHtmlScreen(),
+      home: MainScreen(index: 0),
+      // home: MyHtmlScreen(),
     );
   }
 }

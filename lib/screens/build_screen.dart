@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:binge_read/components/custom_navbar.dart';
 import 'package:binge_read/screens/explore_screen.dart';
 import 'package:binge_read/screens/home_page.dart';
@@ -6,7 +8,7 @@ import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
   int index = 0;
-  MainScreen({this.index = 0});
+  MainScreen({super.key, this.index = 0});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -21,13 +23,13 @@ class _MainScreenState extends State<MainScreen> {
         screen = const HomePage();
         break;
       case 1:
-        screen = ExplorePage();
+        screen = const ExplorePage();
         break;
       case 2:
         screen = Container();
         break;
       default:
-        screen = ProfileScreen();
+        screen = const ProfileScreen();
         break;
     }
 
