@@ -12,6 +12,7 @@ Widget seriesCarousel(
       itemCount: seriesDataList.length,
       itemBuilder: (context, index) {
         final imageUrl = seriesDataList[index]['Thumbnail URL'];
+        final genre = seriesDataList[index]['genre'];
         return InkWell(
           onTap: () {
             Navigator.push(
@@ -19,7 +20,7 @@ Widget seriesCarousel(
               MaterialPageRoute(
                   builder: (context) => SeriesDetailScreen(
                         seriesId: seriesDataList[index]['series_id'],
-                        genre: seriesDataList[index]['genre'],
+                        genre: List<String>.from(genre.map((item) => item.toString())),
                         url: imageUrl,
                         title: seriesDataList[index]['series_name'],
                         rating: seriesDataList[index]['rating'],
