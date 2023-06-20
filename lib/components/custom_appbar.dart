@@ -19,15 +19,15 @@ class CustomAppBar extends StatefulWidget {
 class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
+    String userName = widget.middleElement;
     return Row(
       children: [
         Expanded(
             flex: 2,
             child: Container(
-              width:
-                  60, // Adjust the width and height according to your preference
+              width: 60, // Adjust the width and height according to your preference
               height: 60,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.cyan,
                 shape: BoxShape.circle,
                 image: DecorationImage(
@@ -39,9 +39,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
         // Add spacing between elements
         Expanded(
           flex: 6,
-          child: const Text(
-            'Hello Reader',
-            style: TextStyle(
+          child: Text(
+            'Hello $userName',
+            style: const TextStyle(
                 fontSize: SizeConstants.twentyTwoPixel,
                 fontFamily: 'Lexend',
                 fontWeight: FontWeight.bold,
@@ -52,9 +52,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           flex: 2,
           child: Container(
             padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                border: Border.all(color: AppColors.glowGreen),
-                shape: BoxShape.circle),
+            decoration: BoxDecoration(border: Border.all(color: AppColors.glowGreen), shape: BoxShape.circle),
             child: const Icon(
               Icons.notifications_rounded,
               color: AppColors.glowGreen,

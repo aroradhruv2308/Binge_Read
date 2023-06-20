@@ -1,5 +1,7 @@
 import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/authentication_bloc/bloc/google_authentication_bloc.dart';
+import 'package:binge_read/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,6 +77,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
           if (state is GoogleAuthenticationSuccess) {
             String? name = state.googleUser?.displayName;
+            String? email = state.googleUser?.email;
+
+            User userDetails = User(email!, name!);
+            Globals.userLoginService!.addUserDetails(name, userDetails);
+            Globals.isLogin = true;
             return Center(
               child: Text(
                 "Hi $name You have successfully Login to the App",

@@ -7,11 +7,14 @@ class UserLoginService {
   Future<void> init() async {
     Hive.registerAdapter(UserAdapter());
     _userDetails = await Hive.openBox<User>('userDetails');
+    print(_userDetails);
   }
 
-  Future<User?> getUserDetails(String key) async {
-    if (_userDetails.containsKey(key)) {
-      return _userDetails.get(key);
+  Future<User?> getUserDetails() async {
+    if (_userDetails.isNotEmpty) {
+      // Retrieve the first user details in the box
+      final user = _userDetails.values.first;
+      return user;
     }
 
     return null;
@@ -25,5 +28,9 @@ class UserLoginService {
     if (_userDetails.containsKey(key)) {
       await _userDetails.put(key, updatedUser);
     }
+  }
+
+  Future<void> dispose() async {
+    await _userDetails.close();
   }
 }

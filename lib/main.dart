@@ -1,6 +1,10 @@
+import 'package:binge_read/Utils/global_variables.dart';
+import 'package:binge_read/bloc/general_bloc/bloc/user_data_bloc.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/firebase_options.dart';
+import 'package:binge_read/models/user.dart';
 import 'package:binge_read/screens/episode_reader_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:binge_read/services/user_login_service.dart';
 import 'package:flutter/material.dart';
@@ -15,34 +19,57 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Hive and provide a path to store the box
-  await Hive.initFlutter();
-  final appDocumentDir = await getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDir.path);
 
-  await Firebase.initializeApp(
-    name: 'binge_read',
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  Hive.initFlutter(appDocumentDir.path);
+
   await initializeApp();
+
   runApp(MyApp());
 }
 
 Future<void> initializeApp() async {
-  UserLoginService userLoginService = UserLoginService();
-  await userLoginService.init();
+  await Firebase.initializeApp(
+    name: 'binge_read',
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Globals.userLoginService = UserLoginService();
+  await Globals.userLoginService?.init();
+  User? userDetails = await Globals.userLoginService?.getUserDetails();
+  if (userDetails != null) {
+    Globals.userName = userDetails.userId;
+    Globals.userEmail = userDetails.userEmail;
+    print("details aggyi benchooo");
+  } else {
+    print("abhi tak to shi lagrha hai");
+  }
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+  @override
+  void dispose() {
+    Globals.userLoginService?.dispose();
+    super.dispose(); // Close the Hive box
+  }
+
   @override
   Widget build(BuildContext context) {
     // Once the future has completed successfully
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // home: MainScreen(index: 0),
-      home: MyHtmlScreen(),
+    return MultiBlocProvider(
+      providers: [BlocProvider<UserDataBloc>(create: (context) => UserDataBloc())],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: MainScreen(index: 0),
+        // home: MyHtmlScreen(),
+      ),
     );
   }
 }

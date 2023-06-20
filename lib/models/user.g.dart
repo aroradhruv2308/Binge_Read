@@ -19,7 +19,6 @@ class UserAdapter extends TypeAdapter<User> {
     return User(
       fields[0] as String,
       fields[1] as String,
-      fields[2] as String,
     );
   }
 
@@ -30,7 +29,6 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(0)
       ..write(obj.userEmail)
       ..writeByte(1)
-      ..write(obj.userPassword)
       ..writeByte(2)
       ..write(obj.userId);
   }
@@ -40,8 +38,5 @@ class UserAdapter extends TypeAdapter<User> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      identical(this, other) || other is UserAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

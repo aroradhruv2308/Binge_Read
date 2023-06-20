@@ -1,3 +1,5 @@
+import 'package:binge_read/Utils/global_variables.dart';
+import 'package:binge_read/db/user_data_query.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,9 +23,18 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
         emit(GoogleAuthenticationFaliure());
         return;
       }
+      Map<String, dynamic> userData = {
+        'name': googleUser.displayName,
+        'email': googleUser.email,
+        'photo-url': googleUser.photoUrl,
+        // Add more fields as needed
+      };
+
+      addNewUser(userData);
+      Globals.userName = userData['name'];
+
       emit(GoogleAuthenticationSuccess(googleUser));
     } catch (e) {
-      print("###### $e");
       emit(GoogleAuthenticationFaliure());
     }
   }
