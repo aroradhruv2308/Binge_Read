@@ -17,8 +17,6 @@ import 'screens/build_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentDir = await getApplicationDocumentsDirectory();
-  Hive.initFlutter(appDocumentDir.path);
   await initializeApp();
   runApp(MyApp());
 }
@@ -34,9 +32,6 @@ Future<void> initializeApp() async {
   if (userDetails != null) {
     Globals.userName = userDetails.userId;
     Globals.userEmail = userDetails.userEmail;
-    print("details aggyi benchooo");
-  } else {
-    print("abhi tak to shi lagrha hai");
   }
 }
 

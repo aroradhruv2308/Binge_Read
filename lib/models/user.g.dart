@@ -25,11 +25,10 @@ class UserAdapter extends TypeAdapter<User> {
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.userEmail)
       ..writeByte(1)
-      ..writeByte(2)
       ..write(obj.userId);
   }
 
@@ -38,5 +37,8 @@ class UserAdapter extends TypeAdapter<User> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is UserAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      identical(this, other) ||
+      other is UserAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

@@ -76,15 +76,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
           if (state is GoogleAuthenticationSuccess) {
-            String? name = state.googleUser?.displayName;
-            String? email = state.googleUser?.email;
-
-            User userDetails = User(email!, name!);
-            Globals.userLoginService!.addUserDetails(name, userDetails);
-            Globals.isLogin = true;
             return Center(
               child: Text(
-                "Hi $name You have successfully Login to the App",
+                "Hi ${Globals.userName} You have successfully Login to the App",
                 style: TextStyle(color: Colors.greenAccent),
               ),
             );
