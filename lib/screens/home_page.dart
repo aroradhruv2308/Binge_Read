@@ -5,7 +5,6 @@ import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
 import 'package:binge_read/components/custom_appbar.dart';
 import 'package:binge_read/components/home_page_content.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {

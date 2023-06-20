@@ -21,7 +21,7 @@ class _ExplorePageState extends State<ExplorePage> {
       backgroundColor: AppColors.backgroundColor,
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 80,
           ),
           Padding(
@@ -55,7 +55,7 @@ class _ExplorePageState extends State<ExplorePage> {
               future: getAllGenere(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
@@ -87,7 +87,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                           color: AppColors.whiteColor,
                                         ),
                                       ),
-                                      Text(
+                                      const Text(
                                         'view-all',
                                         style: TextStyle(
                                             fontFamily: 'Lexend',
@@ -96,53 +96,26 @@ class _ExplorePageState extends State<ExplorePage> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 40),
+                                  const SizedBox(height: 40),
                                   FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
                                     future: getBooksForAGenre(),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return Center(child: CircularProgressIndicator());
+                                        return const Center(child: CircularProgressIndicator());
                                       } else if (snapshot.hasError) {
                                         return Center(child: Text('Error: ${snapshot.error}'));
                                       } else {
-                                        List<String> seriesThumbnailUrls = [];
-                                        List<String> nameOfSeries = [];
-                                        List<double> rating = [];
-                                        List<int> numberOfSeason = [];
-                                        List<int> numberOfViews = [];
-                                        List<List<String>> allGenreList = [];
-                                        List<int> seriesId = [];
-                                        List<String> synopsis = [];
+                                        List<dynamic> seriesData = [];
                                         List<QueryDocumentSnapshot<Map<String, dynamic>>>? documents = snapshot.data;
                                         for (QueryDocumentSnapshot<Map<String, dynamic>> doc in documents!) {
-                                          dynamic genreArray = doc.get('genre');
-                                          List<dynamic> genreData = genreArray as List<dynamic>;
-                                          List<String> currentGenre =
-                                              List<String>.from(genreData.map((item) => item.toString()));
-                                          allGenreList.add(currentGenre);
-                                          if (genreArray.contains(genre)) {
-                                            String thumbnailURL = doc.get('Thumbnail URL');
-                                            numberOfSeason.add(doc.get('number_of_seasons') as int);
-                                            seriesThumbnailUrls.add(thumbnailURL);
-                                            rating.add(doc.get('rating') as double);
-                                            nameOfSeries.add(doc.get('series_name') as String);
-                                            numberOfViews.add(doc.get('total_views') as int);
-                                            seriesId.add(doc.get('series_id') as int);
-                                            synopsis.add(doc.get('about') as String);
-                                          }
+                                          seriesData.add(doc.data());
                                         }
 
                                         return seriesCarousel(
-                                            synopsis: synopsis,
-                                            context: context,
-                                            homeScreenBloc: HomeScreenBloc(),
-                                            seriesThumbnailUrls: seriesThumbnailUrls,
-                                            nameOfSeries: nameOfSeries,
-                                            rating: rating,
-                                            numberOfSeason: numberOfSeason,
-                                            numberOfViews: numberOfViews,
-                                            genre: allGenreList,
-                                            seriesId: seriesId);
+                                          context: context,
+                                          homeScreenBloc: HomeScreenBloc(),
+                                          seriesDataList: seriesData,
+                                        );
                                       }
                                     },
                                   ),

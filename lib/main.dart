@@ -63,6 +63,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     // Once the future has completed successfully
+<<<<<<< HEAD
     return MultiBlocProvider(
       providers: [BlocProvider<UserDataBloc>(create: (context) => UserDataBloc())],
       child: MaterialApp(
@@ -70,6 +71,12 @@ class _MyAppState extends State<MyApp> {
         home: MainScreen(index: 0),
         // home: MyHtmlScreen(),
       ),
+=======
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MainScreen(index: 0),
+      // home: MyHtmlScreen(),
+>>>>>>> f2303be999d5f5ba56e59e74000e33d2c03ff941
     );
   }
 }
