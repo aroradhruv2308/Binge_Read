@@ -1,24 +1,19 @@
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/general_bloc/bloc/user_data_bloc.dart';
-import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/firebase_options.dart';
 import 'package:binge_read/models/user.dart';
-import 'package:binge_read/screens/episode_reader_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:binge_read/services/user_login_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
+import 'db/query.dart';
 import 'screens/build_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<void> initializeApp() async {
@@ -26,9 +21,12 @@ Future<void> initializeApp() async {
     name: 'binge_read',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Create userLogin service.
   Globals.userLoginService = UserLoginService();
   await Globals.userLoginService?.init();
   User? userDetails = await Globals.userLoginService?.getUserDetails();
+
   if (userDetails != null) {
     Globals.userName = userDetails.userId;
     Globals.userEmail = userDetails.userEmail;
@@ -37,18 +35,34 @@ Future<void> initializeApp() async {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  // This widget is the root of the application.
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   @override
   void dispose() {
-    Globals.userLoginService?.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose(); // Close the Hive box
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      // Update the read counts if app is being paused, this
+      // can happen when users opens another app and put the
+      // app in recents.
+      updateViewCountsInFirestore();
+    }
   }
 
   @override

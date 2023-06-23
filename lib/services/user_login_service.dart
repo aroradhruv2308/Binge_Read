@@ -1,4 +1,7 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:binge_read/models/user.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,7 +16,9 @@ class UserLoginService {
     Hive.registerAdapter(UserAdapter());
 
     _userDetails = await Hive.openBox<User>('userDetails');
-    print(_userDetails);
+    if (kDebugMode) {
+      print(_userDetails);
+    }
   }
 
   Future<User?> getUserDetails() async {
@@ -22,7 +27,6 @@ class UserLoginService {
       final user = _userDetails.values.first;
       return user;
     }
-
     return null;
   }
 
