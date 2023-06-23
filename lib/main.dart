@@ -32,6 +32,7 @@ Future<void> initializeApp() async {
   if (userDetails != null) {
     Globals.userName = userDetails.userId;
     Globals.userEmail = userDetails.userEmail;
+    Globals.isLogin = true;
   }
 }
 

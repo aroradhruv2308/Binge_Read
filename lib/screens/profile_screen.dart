@@ -1,6 +1,7 @@
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/authentication_bloc/bloc/google_authentication_bloc.dart';
+import 'package:binge_read/components/profile_screen_content.dart';
 import 'package:binge_read/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -29,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: BlocBuilder<GoogleAuthenticationBloc, GoogleAuthenticationState>(
         bloc: googleAuthBloc,
         builder: (context, state) {
-          if (state is GoogleAuthenticationInitial) {
+          if (state is GoogleAuthenticationInitial && Globals.isLogin == false) {
             return Column(children: [
               const SizedBox(
                 height: 60,
@@ -75,13 +76,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text("Opps some error occured try sigin again"),
             );
           }
-          if (state is GoogleAuthenticationSuccess) {
-            return Center(
-              child: Text(
-                "Hi ${Globals.userName} You have successfully Login to the App",
-                style: TextStyle(color: Colors.greenAccent),
-              ),
-            );
+          if (state is GoogleAuthenticationSuccess || Globals.isLogin == true) {
+            return const LoginUserProfileScreen();
           }
           return Container();
         },
