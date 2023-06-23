@@ -1,3 +1,4 @@
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
 import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/screens/series_detail_screen.dart';
@@ -15,6 +16,11 @@ Widget seriesCarousel(
         final genre = seriesDataList[index]['genre'];
         return InkWell(
           onTap: () {
+            int seriesId = seriesDataList[index]['series_id'];
+
+            // Add the series ID and its view count increment to the list
+            Globals.seriesReadCount[seriesId] = (Globals.seriesReadCount[seriesId] ??= 0) + 1;
+
             Navigator.push(
               context,
               MaterialPageRoute(
