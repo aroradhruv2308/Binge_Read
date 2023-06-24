@@ -5,5 +5,5 @@ class Globals {
   static String userName = "Reader";
   static String userEmail = "not present";
   static UserLoginService? userLoginService;
-  static Map<int, int> seriesReadCount = {};
+  static Map<String, int> seriesReadCount = {};
 }
