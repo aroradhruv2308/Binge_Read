@@ -31,7 +31,7 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
         // Add more fields as needed
       };
 
-      addNewUser(userData);
+      await addNewUser(userData);
       Globals.userName = userData['name'];
       String? name = userData['name'];
       String? email = userData['email'];
