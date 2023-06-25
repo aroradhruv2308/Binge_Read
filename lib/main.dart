@@ -67,12 +67,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+<<<<<<< HEAD
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached ||
         state == AppLifecycleState.inactive) {
       // Update the read counts if app is being paused, this
       // can happen when users opens another app and put the
       // app in recents.
+=======
+    if (state == AppLifecycleState.paused) {
+      // App is in the background or closed, make the HTTP request to update
+      // view counts for the series.
+>>>>>>> 4eacdbc0081cc17adf767c97f5593a2d4df9f193
       updateViewCountsInFirestore();
     }
   }
