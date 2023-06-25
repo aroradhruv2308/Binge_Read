@@ -1,10 +1,11 @@
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
 import 'package:binge_read/components/home_page_books_data.dart';
-import 'package:binge_read/db/explore_screen_query.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+
+import '../db/query.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);

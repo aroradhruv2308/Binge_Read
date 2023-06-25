@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:binge_read/services/user_login_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'db/query.dart';
 import 'screens/build_screen.dart';
@@ -21,6 +23,14 @@ Future<void> initializeApp() async {
     name: 'binge_read',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initiallising Hive
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter(appDocumentDir.path);
+
+  // Register Hive Adapters
+  Hive.registerAdapter(UserAdapter());
+  Hive.registerAdapter(AppDataAdapter());
 
   // Create userLogin service.
   Globals.userLoginService = UserLoginService();
@@ -57,7 +67,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached ||
+        state == AppLifecycleState.inactive) {
       // Update the read counts if app is being paused, this
       // can happen when users opens another app and put the
       // app in recents.

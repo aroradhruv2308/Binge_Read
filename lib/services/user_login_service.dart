@@ -10,11 +10,6 @@ class UserLoginService {
   late Box<User> _userDetails;
 
   Future<void> init() async {
-    final appDocumentDir = await getApplicationDocumentsDirectory();
-    await Hive.initFlutter(appDocumentDir.path);
-
-    Hive.registerAdapter(UserAdapter());
-
     _userDetails = await Hive.openBox<User>('userDetails');
     if (kDebugMode) {
       print(_userDetails);

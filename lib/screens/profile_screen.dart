@@ -77,7 +77,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
           if (state is GoogleAuthenticationSuccess || Globals.isLogin == true) {
-            return const LoginUserProfileScreen();
+            return LoginUserProfileScreen(
+              googleAuthBloc: googleAuthBloc,
+            );
           }
           return Container();
         },

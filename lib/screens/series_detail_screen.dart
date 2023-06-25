@@ -3,7 +3,7 @@ import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_
 
 import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/db/appDto.dart';
-import 'package:binge_read/db/series_detail_screen_query.dart';
+import 'package:binge_read/db/query.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

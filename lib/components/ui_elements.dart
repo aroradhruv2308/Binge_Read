@@ -1,6 +1,8 @@
 import 'package:binge_read/Utils/animations.dart';
 import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
+import 'package:binge_read/db/query.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:binge_read/Utils/constants.dart';
@@ -211,38 +213,156 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
 }
 
 Widget episodeCard({required String episodeName, required int episodeNumber, required String episodeSummary}) {
-  return ExpansionTile(
-    backgroundColor: AppColors.navBarColor,
-    collapsedBackgroundColor: AppColors.navBarColor,
-    expandedAlignment: Alignment.topCenter,
-    textColor: AppColors.glowGreen,
-    collapsedIconColor: AppColors.greyColor,
-    iconColor: AppColors.glowGreen,
-    collapsedTextColor: AppColors.whiteColor,
-    trailing: IconButton(
-      iconSize: 16,
-      icon: Icon(Icons.arrow_forward_ios),
-      onPressed: () {},
-    ),
-    childrenPadding: EdgeInsets.zero,
-    title: Text(
-      "Episode $episodeNumber : $episodeName",
-      style: const TextStyle(
-        overflow: TextOverflow.ellipsis,
-        fontSize: 16.0,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'Lexend',
+  return InkWell(
+    onDoubleTap: () {},
+    child: ExpansionTile(
+      backgroundColor: AppColors.navBarColor,
+      collapsedBackgroundColor: AppColors.navBarColor,
+      expandedAlignment: Alignment.topCenter,
+      textColor: AppColors.glowGreen,
+      collapsedIconColor: AppColors.greyColor,
+      iconColor: AppColors.glowGreen,
+      collapsedTextColor: AppColors.whiteColor,
+      trailing: IconButton(
+        iconSize: 16,
+        icon: Icon(Icons.arrow_forward_ios),
+        onPressed: () {},
       ),
-    ),
-    children: <Widget>[
-      ListTile(
-        title: Text(
-          episodeSummary,
+      childrenPadding: EdgeInsets.zero,
+      title: Text(
+        "Episode $episodeNumber : $episodeName",
+        style: const TextStyle(
           overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-          style: TextStyle(fontWeight: FontWeight.w100, color: AppColors.greyColor, fontFamily: 'Lexend'),
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Lexend',
         ),
-      )
-    ],
+      ),
+      children: <Widget>[
+        ListTile(
+          title: Text(
+            episodeSummary,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: TextStyle(fontWeight: FontWeight.w100, color: AppColors.greyColor, fontFamily: 'Lexend'),
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget customListTile({int id = 1}) {
+  return FutureBuilder<Map<String, dynamic>?>(
+    future: fetchSeriesDataById(id), // Specify the future to monitor
+    builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>?> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        // While the future is loading
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (snapshot.hasError) {
+        // If there was an error
+        return Center(
+          child: Text('Error: ${snapshot.error}'),
+        );
+      } else {
+        // When the future completes successfully
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          height: 80,
+          color: AppColors.navBarColor,
+          child: Flex(
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Flexible(
+                  flex: 2,
+                  child: Container(
+                    width: 60,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: AppColors.greyColor,
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: NetworkImage(snapshot.data?['Thumbnail URL']),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        snapshot.data?['series_name'],
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Lexend',
+                            color: AppColors.whiteColor,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Flex(
+                        direction: Axis.horizontal,
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Row(
+                              children: [
+                                Text(
+                                  "${snapshot.data?['rating']}",
+                                  style: const TextStyle(
+                                      color: AppColors.greyColor,
+                                      fontFamily: "Lexend",
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: SizeConstants.sixteenPixel),
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                  height: 8,
+                                ),
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Flexible(
+                            flex: 4,
+                            child: Text(
+                              "Seasons: ${snapshot.data?['number_of_seasons']}",
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontFamily: 'Lexend',
+                                  color: AppColors.greyColor,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    },
   );
 }

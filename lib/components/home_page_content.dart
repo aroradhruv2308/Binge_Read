@@ -2,7 +2,7 @@
 
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
-import 'package:binge_read/db/home_screen_query.dart';
+import 'package:binge_read/db/query.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
