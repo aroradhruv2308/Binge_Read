@@ -132,7 +132,6 @@ void _updateFirestoreViewCounts(dynamic batch) {
         batch.update(seriesRef, {
           'total_views': FieldValue.increment(Globals.seriesReadCount[seriesId] as num),
         });
-        await Future.delayed(const Duration(seconds: 4));
       }
     });
   }

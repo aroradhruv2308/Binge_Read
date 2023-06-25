@@ -214,7 +214,9 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
 
 Widget episodeCard({required String episodeName, required int episodeNumber, required String episodeSummary}) {
   return InkWell(
-    onDoubleTap: () {},
+    onDoubleTap: () async {
+      await Globals.userAppDataService?.incrementReadCount("4");
+    },
     child: ExpansionTile(
       backgroundColor: AppColors.navBarColor,
       collapsedBackgroundColor: AppColors.navBarColor,

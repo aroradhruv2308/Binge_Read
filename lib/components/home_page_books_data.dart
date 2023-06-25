@@ -16,11 +16,6 @@ Widget seriesCarousel(
         final genre = seriesDataList[index]['genre'];
         return InkWell(
           onTap: () {
-            String seriesId = seriesDataList[index]['series_id'].toString();
-
-            // Add the series ID and its view count increment to the list
-            Globals.seriesReadCount[seriesId] = (Globals.seriesReadCount[seriesId] ??= 0) + 1;
-
             Navigator.push(
               context,
               MaterialPageRoute(

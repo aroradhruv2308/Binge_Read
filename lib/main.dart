@@ -2,6 +2,7 @@ import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/general_bloc/bloc/user_data_bloc.dart';
 import 'package:binge_read/firebase_options.dart';
 import 'package:binge_read/models/user.dart';
+import 'package:binge_read/services/user_app_data_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:binge_read/services/user_login_service.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +33,11 @@ Future<void> initializeApp() async {
   Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(AppDataAdapter());
 
-  // Create userLogin service.
+  // Create user services.
   Globals.userLoginService = UserLoginService();
+  Globals.userAppDataService = UserAppDataService();
   await Globals.userLoginService?.init();
+  await Globals.userAppDataService?.init();
   User? userDetails = await Globals.userLoginService?.getUserDetails();
 
   if (userDetails != null) {
@@ -67,18 +70,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-<<<<<<< HEAD
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.detached ||
-        state == AppLifecycleState.inactive) {
-      // Update the read counts if app is being paused, this
-      // can happen when users opens another app and put the
-      // app in recents.
-=======
     if (state == AppLifecycleState.paused) {
       // App is in the background or closed, make the HTTP request to update
       // view counts for the series.
->>>>>>> 4eacdbc0081cc17adf767c97f5593a2d4df9f193
       updateViewCountsInFirestore();
     }
   }
