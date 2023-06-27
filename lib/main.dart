@@ -45,6 +45,14 @@ Future<void> initializeApp() async {
     Globals.userEmail = userDetails.userEmail;
     Globals.isLogin = true;
   }
+
+  // Update total view count of series data from last
+  // session. This can happen if user visited some episodes
+  // for less than threshold time (20 secs) and closed the app.
+  // Then we update the counts in next session when user
+  // opens the app again, till then the counts are stored in
+  // local storage.
+  await Globals.userAppDataService?.batchUpdateReadCounts();
 }
 
 class MyApp extends StatefulWidget {
