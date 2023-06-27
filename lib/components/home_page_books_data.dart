@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
 import 'package:binge_read/components/ui_elements.dart';
@@ -32,10 +34,10 @@ Widget seriesCarousel(
           },
           child: seriesCard(
             context: context,
-            image_url: imageUrl,
+            imageUrl: imageUrl,
             rating: seriesDataList[index]['rating'],
-            number_season: seriesDataList[index]['number_of_seasons'],
-            series_name: seriesDataList[index]['series_name'],
+            numberSeason: seriesDataList[index]['number_of_seasons'],
+            seriesName: seriesDataList[index]['series_name'],
           ),
         );
       },

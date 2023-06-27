@@ -25,7 +25,7 @@ Future<void> initializeApp() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initiallising Hive
+  // Initializing Hive
   final appDocumentDir = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDir.path);
 
@@ -45,6 +45,14 @@ Future<void> initializeApp() async {
     Globals.userEmail = userDetails.userEmail;
     Globals.isLogin = true;
   }
+
+  // Update total view count of series data from last
+  // session. This can happen if user visited some episodes
+  // for less than threshold time (20 secs) and closed the app.
+  // Then we update the counts in next session when user
+  // opens the app again, till then the counts are stored in
+  // local storage.
+  await Globals.userAppDataService?.batchUpdateReadCounts();
 }
 
 class MyApp extends StatefulWidget {
@@ -54,29 +62,8 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends State<MyApp> {
   // This widget is the root of the application.
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose(); // Close the Hive box
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      // App is in the background or closed, make the HTTP request to update
-      // view counts for the series.
-      updateViewCountsInFirestore();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // Once the future has completed successfully
