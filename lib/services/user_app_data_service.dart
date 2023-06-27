@@ -13,7 +13,7 @@ class UserAppDataService {
   Timer? _updateTimer;
 
   void startTimer() {
-    _updateTimer = Timer(const Duration(seconds: 10), () {
+    _updateTimer = Timer(const Duration(seconds: 20), () {
       if (_isTimerRunning) {
         _isTimerRunning = false;
         batchUpdateReadCounts();
@@ -23,7 +23,6 @@ class UserAppDataService {
   }
 
   Future<void> batchUpdateReadCounts() async {
-    logger.e("updating count");
     final appData = _userAppData.get('appData');
     if (appData != null) {
       final readCountUpdates = appData.seriesReadCount;

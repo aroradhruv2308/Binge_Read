@@ -42,7 +42,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
 
     _colorAnimation = ColorTween(
@@ -96,9 +96,9 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                 ),
               ))
         ],
-        title: Text(
+        title: const Text(
           "Detail",
-          style: const TextStyle(fontFamily: 'Lexend'),
+          style: TextStyle(fontFamily: 'Lexend'),
           overflow: TextOverflow.ellipsis,
         ),
         backgroundColor: AppColors.backgroundColor,
@@ -150,7 +150,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(5),
                             child: Container(
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
                                     color: AppColors.backgroundColor,
@@ -184,7 +184,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                         direction: Axis.vertical,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Text(
@@ -254,11 +254,11 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                                               : MediaQuery.of(context).size.width * 0.22,
                                         ),
                                         child: Container(
-                                          padding: EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(8),
                                           color: AppColors.glowGreen,
                                           child: Text(
                                             item,
-                                            style: TextStyle(fontSize: 16),
+                                            style: const TextStyle(fontSize: 16),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -292,7 +292,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
               ),
             ),
             Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: expandableText(
                   text: widget.synopsis,
                   textHeight: 100,
@@ -318,7 +318,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(right: 14),
+                    padding: const EdgeInsets.only(right: 14),
                     child: SeasonDropdown(
                       numberOfSeasons: 4,
                       delailScreenBloc: delailScreenBloc,
@@ -326,7 +326,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
               ],
             ),
             Padding(
-                padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
+                padding: const EdgeInsets.fromLTRB(5, 20, 0, 0),
                 child: BlocBuilder<BookDetailScreenBloc, BookDetailScreenState>(
                   bloc: delailScreenBloc,
                   builder: (context, state) {
@@ -355,6 +355,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                               (index) => Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: episodeCard(
+                                  seriesId: widget.seriesId,
                                   episodeName: episodes[index].name,
                                   episodeSummary: episodes[index].summary,
                                   episodeNumber: index + 1,

@@ -1,23 +1,22 @@
-import 'package:binge_read/Utils/animations.dart';
+// ignore_for_file: must_be_immutable, library_private_types_in_public_api
+
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:binge_read/Utils/constants.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 
 Widget seriesCard(
     {required BuildContext context,
-    String image_url = "",
-    String series_name = "",
+    String imageUrl = "",
+    String seriesName = "",
     double rating = 0.0,
-    int number_season = 0}) {
+    int numberSeason = 0}) {
   return Container(
-    padding: EdgeInsets.only(right: 16),
+    padding: const EdgeInsets.only(right: 16),
     width: MediaQuery.of(context).size.width * 0.5,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,10 +24,10 @@ Widget seriesCard(
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.5,
               child: Image.network(
-                image_url,
+                imageUrl,
                 fit: BoxFit.fill,
 
                 // Replace with your image URL
@@ -41,7 +40,7 @@ Widget seriesCard(
           height: 12,
         ),
         Text(
-          series_name,
+          seriesName,
           style: const TextStyle(
               color: AppColors.whiteColor,
               fontFamily: "Lexend",
@@ -55,7 +54,7 @@ Widget seriesCard(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Seasons : $number_season",
+              "Seasons : $numberSeason",
               style: const TextStyle(
                   color: AppColors.greyColor,
                   fontFamily: "Lexend",
@@ -90,13 +89,13 @@ Widget expandableText({String text = "Data has'nt arrived yet", double textHeigh
     text,
     trimLines: (textHeight / 18).floor(), // Adjust the line height according to your font size
     style: GoogleFonts.lato(
-      textStyle: TextStyle(color: AppColors.greyColor, fontSize: 18),
+      textStyle: const TextStyle(color: AppColors.greyColor, fontSize: 18),
     ),
     trimMode: TrimMode.Line,
     trimCollapsedText: 'Show more',
     trimExpandedText: ' Show less',
     moreStyle: const TextStyle(fontSize: 18, color: AppColors.glowGreen),
-    delimiterStyle: TextStyle(color: AppColors.glowGreen),
+    delimiterStyle: const TextStyle(color: AppColors.glowGreen),
     colorClickableText: AppColors.glowGreen,
   );
 }
@@ -105,7 +104,7 @@ class SeasonDropdown extends StatefulWidget {
   final int numberOfSeasons;
   BookDetailScreenBloc delailScreenBloc = BookDetailScreenBloc();
 
-  SeasonDropdown({required this.numberOfSeasons, required this.delailScreenBloc});
+  SeasonDropdown({super.key, required this.numberOfSeasons, required this.delailScreenBloc});
 
   @override
   _SeasonDropdownState createState() => _SeasonDropdownState();
@@ -191,7 +190,7 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
         dropdownStyleData: DropdownStyleData(
             maxHeight: 200,
             width: 200,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
               color: AppColors.backgroundColor,
@@ -212,10 +211,11 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
   }
 }
 
-Widget episodeCard({required String episodeName, required int episodeNumber, required String episodeSummary}) {
+Widget episodeCard(
+    {required int seriesId, required String episodeName, required int episodeNumber, required String episodeSummary}) {
   return InkWell(
     onDoubleTap: () async {
-      await Globals.userAppDataService?.incrementReadCount("4");
+      await Globals.userAppDataService?.incrementReadCount(seriesId.toString());
     },
     child: ExpansionTile(
       backgroundColor: AppColors.navBarColor,
@@ -227,7 +227,7 @@ Widget episodeCard({required String episodeName, required int episodeNumber, req
       collapsedTextColor: AppColors.whiteColor,
       trailing: IconButton(
         iconSize: 16,
-        icon: Icon(Icons.arrow_forward_ios),
+        icon: const Icon(Icons.arrow_forward_ios),
         onPressed: () {},
       ),
       childrenPadding: EdgeInsets.zero,
@@ -246,7 +246,7 @@ Widget episodeCard({required String episodeName, required int episodeNumber, req
             episodeSummary,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
-            style: TextStyle(fontWeight: FontWeight.w100, color: AppColors.greyColor, fontFamily: 'Lexend'),
+            style: const TextStyle(fontWeight: FontWeight.w100, color: AppColors.greyColor, fontFamily: 'Lexend'),
           ),
         )
       ],
