@@ -9,6 +9,11 @@ class GoogleAuthenticationInitial extends GoogleAuthenticationState {
   List<Object?> get props => [];
 }
 
+class DisplayNameChange extends GoogleAuthenticationState {
+  @override
+  List<Object?> get props => [];
+}
+
 class GoogleAuthenticationLoading extends GoogleAuthenticationState {
   @override
   List<Object?> get props => [];

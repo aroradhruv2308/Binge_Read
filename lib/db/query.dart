@@ -96,6 +96,18 @@ Future<DocumentSnapshot?> getUserByEmail(String email) async {
   return null;
 }
 
+Future<void> updateUserNameByEmail(String email, String newName) async {
+  final QuerySnapshot snapshot =
+      await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
+
+  if (snapshot.docs.isNotEmpty) {
+    final DocumentSnapshot userDocument = snapshot.docs.first;
+    final String documentId = userDocument.id;
+
+    await FirebaseFirestore.instance.collection('User-Data').doc(documentId).update({'name': newName});
+  }
+}
+
 Future<void> updateViewCountsInFirestore() async {
   const String serverEndpoint = 'http://192.168.1.37:3000/api/series/update-view-counts';
 
@@ -154,4 +166,28 @@ Future<Map<String, dynamic>?> fetchSeriesDataById(int seriesId) async {
     print('Error fetching series data: $error');
     return null;
   }
+}
+
+Future<List<dynamic>> fetchIDsFromFirestore(String typeOfId) async {
+  // Fetch the array of IDs from Firestore
+  // Replace this with your actual Firestore logic
+  CollectionReference userCollection = FirebaseFirestore.instance.collection('User-Data');
+  try {
+    if (Globals.userEmail != "") {
+      QuerySnapshot userDataQuery = await userCollection.where("email", isEqualTo: Globals.userEmail).limit(1).get();
+      if (userDataQuery.size > 0) {
+        DocumentSnapshot userDataSnapshot = userDataQuery.docs[0];
+        Map<String, dynamic> userDataMap = userDataSnapshot.data() as Map<String, dynamic>;
+        return userDataMap[typeOfId];
+      } else {
+        return [];
+      }
+    }
+    return [];
+  } catch (error) {
+    print('Error fetching series data: $error');
+    return [];
+  }
+  await Future.delayed(Duration(seconds: 2)); // Simulating a delay
+  return [4, 1, 2, 3, 4, 1];
 }

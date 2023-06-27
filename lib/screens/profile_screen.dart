@@ -2,6 +2,7 @@ import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/authentication_bloc/bloc/google_authentication_bloc.dart';
 import 'package:binge_read/components/profile_screen_content.dart';
+import 'package:binge_read/db/query.dart';
 import 'package:binge_read/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -72,9 +73,76 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return CircularProgressIndicator();
           }
           if (state is GoogleAuthenticationFaliure) {
-            return Center(
-              child: Text("Opps some error occured try sigin again"),
+            return const Center(
+              child: Text(
+                "Opps some error occured try sigin again",
+                style: TextStyle(color: AppColors.whiteColor),
+              ),
             );
+          }
+          if (state is GoogleAuthenticationSuccess) {
+            WidgetsBinding.instance?.addPostFrameCallback((_) {
+              // Show your dialog here
+              showDialog(
+                barrierColor: Colors.transparent,
+                context: context,
+                builder: (BuildContext context) {
+                  String userInput = ''; // Variable to store user input
+
+                  return AlertDialog(
+                    backgroundColor: AppColors.dilogueBoxColor,
+                    shadowColor: AppColors.backgroundColor,
+                    surfaceTintColor: AppColors.backgroundColor, // Set the desired background color
+                    title: const Text(
+                      'What should we call you?',
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontFamily: 'Lexend',
+                        fontSize: 18,
+                      ),
+                    ),
+                    content: TextField(
+                      style: const TextStyle(color: AppColors.greyColor, fontFamily: 'Lexend'),
+                      cursorColor: AppColors.glowGreen,
+                      maxLength: 15, // Set the desired maximum length
+                      onChanged: (value) {
+                        userInput = value; // Update the userInput variable as the user types
+                      },
+                      decoration: const InputDecoration(
+                          focusColor: AppColors.glowGreen,
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.glowGreen), // Set the desired underline color
+                          ),
+                          hintText: 'Type Here',
+                          hintStyle: TextStyle(
+                              color: AppColors.darkGreyColor), // Text to display when character limit is exceeded
+                          counterStyle: TextStyle(color: Colors.green, fontFamily: 'Lexend', fontSize: 16),
+                          semanticCounterText: "word limit exeeded" // Set the desired color for the word counter
+                          ),
+                    ),
+
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop(userInput);
+                          Globals.userDisplayName = userInput;
+                          Globals.userName = userInput;
+                          User userDetails = User(Globals.userEmail, userInput);
+                          await Globals.userLoginService!.updateUserDetails(Globals.userEmail, userDetails);
+                          updateUserNameByEmail(Globals.userEmail, userInput);
+                          googleAuthBloc.add(const ChangeDisplayName());
+                          // Return the userInput when dialog is closed
+                        },
+                        child: const Text(
+                          'Submit',
+                          style: TextStyle(color: AppColors.glowGreen, fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
           }
           if (state is GoogleAuthenticationSuccess || Globals.isLogin == true) {
             return LoginUserProfileScreen(

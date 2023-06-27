@@ -9,6 +9,7 @@ class Globals {
   static UserLoginService? userLoginService;
   static UserAppDataService? userAppDataService;
   static Map<String, int> seriesReadCount = {};
+  static String userDisplayName = "";
 }
 
 final Logger logger = Logger();

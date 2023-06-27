@@ -11,3 +11,7 @@ class SignInWithGoogleEvent extends GoogleAuthenticationEvent {
 class SignOutEvent extends GoogleAuthenticationEvent {
   const SignOutEvent();
 }
+
+class ChangeDisplayName extends GoogleAuthenticationEvent {
+  const ChangeDisplayName();
+}

@@ -5,6 +5,7 @@ import 'package:binge_read/bloc/authentication_bloc/bloc/google_authentication_b
 import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginUserProfileScreen extends StatefulWidget {
   final GoogleAuthenticationBloc googleAuthBloc;
@@ -15,6 +16,11 @@ class LoginUserProfileScreen extends StatefulWidget {
 }
 
 class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +37,6 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
               final String userName = userData['name'];
               final String profilePicUrl = userData['photo-url'];
               final String email = userData['email'];
-
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,13 +82,28 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                       height: 20,
                     ),
                     Center(
-                      child: Text(
-                        capitalizeWords(userName),
-                        style: const TextStyle(
-                            fontFamily: 'Lexend',
-                            color: AppColors.whiteColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20),
+                      child: BlocBuilder<GoogleAuthenticationBloc, GoogleAuthenticationState>(
+                        bloc: widget.googleAuthBloc,
+                        builder: (context, state) {
+                          if (state is DisplayNameChange) {
+                            return Text(
+                              Globals.userDisplayName,
+                              style: const TextStyle(
+                                  fontFamily: 'Lexend',
+                                  color: AppColors.whiteColor,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 20),
+                            );
+                          }
+                          return Text(
+                            capitalizeWords(userName),
+                            style: const TextStyle(
+                                fontFamily: 'Lexend',
+                                color: AppColors.whiteColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -127,20 +147,22 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                           ),
                         ),
                         children: <Widget>[
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.4,
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: <Widget>[
-                                customListTile(id: 4),
-                                customListTile(id: 1),
-                                customListTile(id: 2),
-                                customListTile(id: 3),
-                                customListTile(id: 4),
-                                customListTile(id: 1),
-                              ],
-                            ),
-                          ),
+                          Container(
+                              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
+                              child: FutureBuilder<List<dynamic>>(
+                                future: fetchIDsFromFirestore("recently_viewed_series"),
+                                builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Container(); // Show a loading indicator while fetching data
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    List<dynamic> ids =
+                                        snapshot.data ?? []; // Get the fetched IDs (or empty list if null)
+                                    return buildListView(ids);
+                                  }
+                                },
+                              )),
                         ],
                       ),
                     ),
@@ -168,20 +190,22 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                         ),
                       ),
                       children: <Widget>[
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.4,
-                          child: ListView(
-                            shrinkWrap: true,
-                            children: <Widget>[
-                              customListTile(id: 4),
-                              customListTile(id: 1),
-                              customListTile(id: 2),
-                              customListTile(id: 3),
-                              customListTile(id: 4),
-                              customListTile(id: 1),
-                            ],
-                          ),
-                        ),
+                        Container(
+                            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
+                            child: FutureBuilder<List<dynamic>>(
+                              future: fetchIDsFromFirestore("most_viewed_series"),
+                              builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Container(); // Show a loading indicator while fetching data
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  List<dynamic> ids =
+                                      snapshot.data ?? []; // Get the fetched IDs (or empty list if null)
+                                  return buildListView(ids);
+                                }
+                              },
+                            )),
                       ],
                     )
                   ],

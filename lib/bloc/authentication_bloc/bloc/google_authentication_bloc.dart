@@ -15,6 +15,10 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
     on<GoogleAuthenticationEvent>((event, emit) {});
     on<SignInWithGoogleEvent>(_handleSignInWithGoogle);
     on<SignOutEvent>(_handleSignOut);
+    on<ChangeDisplayName>((event, emit) {
+      DisplayNameChange state = DisplayNameChange();
+      emit(state);
+    });
   }
   Future<void> _handleSignInWithGoogle(SignInWithGoogleEvent event, Emitter<GoogleAuthenticationState> emit) async {
     emit(GoogleAuthenticationLoading());

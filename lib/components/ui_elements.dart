@@ -260,9 +260,7 @@ Widget customListTile({int id = 1}) {
     builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>?> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         // While the future is loading
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return Container();
       } else if (snapshot.hasError) {
         // If there was an error
         return Center(
@@ -365,6 +363,26 @@ Widget customListTile({int id = 1}) {
           ),
         );
       }
+    },
+  );
+}
+
+Widget buildListView(List<dynamic> ids) {
+  if (ids.length == 0) {
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Text(
+        "Found No List Yet",
+        style: TextStyle(color: AppColors.greyColor, fontFamily: 'Lexend', fontSize: 16),
+      ),
+    );
+  }
+  return ListView.builder(
+    shrinkWrap: true,
+    itemCount: ids.length,
+    itemBuilder: (BuildContext context, int index) {
+      int id = ids[index];
+      return customListTile(id: id);
     },
   );
 }
