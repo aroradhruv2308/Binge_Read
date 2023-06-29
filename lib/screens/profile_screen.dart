@@ -81,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
           if (state is GoogleAuthenticationSuccess) {
-            WidgetsBinding.instance?.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               // Show your dialog here
               showNameDilogue(context);
             });
