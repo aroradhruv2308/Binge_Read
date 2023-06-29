@@ -95,13 +95,27 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                                   fontSize: 20),
                             );
                           }
-                          return Text(
-                            capitalizeWords(userName),
-                            style: const TextStyle(
-                                fontFamily: 'Lexend',
-                                color: AppColors.whiteColor,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 20),
+                          return Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  capitalizeWords(userName),
+                                  style: const TextStyle(
+                                      fontFamily: 'Lexend',
+                                      color: AppColors.whiteColor,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18),
+                                ),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      size: 18,
+                                      color: Colors.greenAccent,
+                                    ))
+                              ],
+                            ),
                           );
                         },
                       ),
