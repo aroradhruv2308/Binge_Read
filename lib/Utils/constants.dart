@@ -14,8 +14,8 @@ class AppColors {
 }
 
 class SizeConstants {
-  static const double twentyFourPixel = 24.0;
-  static const double twentyTwoPixel = 22;
+  static const double twentyFourPixel = 24.0; // Heading
+  static const double eighteenPixel = 18.0; // Sub-Heading
   static const double sixteenPixel = 16;
   static const double twelvePixel = 12;
   static const double eightPixel = 8;

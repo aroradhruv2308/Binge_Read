@@ -42,7 +42,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           child: Text(
             'Hello $userName',
             style: const TextStyle(
-                fontSize: SizeConstants.twentyTwoPixel,
+                fontSize: SizeConstants.eighteenPixel,
                 fontFamily: 'Lexend',
                 fontWeight: FontWeight.bold,
                 color: AppColors.whiteColor),

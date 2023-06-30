@@ -6,38 +6,46 @@ import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/screens/series_detail_screen.dart';
 import 'package:flutter/material.dart';
 
-Widget seriesCarousel(
-    {required BuildContext context, required HomeScreenBloc homeScreenBloc, required List<dynamic> seriesDataList}) {
+Widget seriesCarousel({
+  required BuildContext context,
+  required HomeScreenBloc homeScreenBloc,
+  required List<dynamic> seriesDataList,
+}) {
   return SizedBox(
-    height: 250, // Set the desired height for the horizontal scroll
+    height: 200,
     child: ListView.builder(
-      scrollDirection: Axis.horizontal, // Set the scroll direction to horizontal
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
       itemCount: seriesDataList.length,
       itemBuilder: (context, index) {
         final imageUrl = seriesDataList[index]['Thumbnail URL'];
         final genre = seriesDataList[index]['genre'];
-        return InkWell(
+        return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SeriesDetailScreen(
-                        seriesId: seriesDataList[index]['series_id'],
-                        genre: List<String>.from(genre.map((item) => item.toString())),
-                        url: imageUrl,
-                        title: seriesDataList[index]['series_name'],
-                        rating: seriesDataList[index]['rating'],
-                        numberOfViews: seriesDataList[index]['total_views'],
-                        synopsis: seriesDataList[index]['about'],
-                      )),
+                builder: (context) => SeriesDetailScreen(
+                  seriesId: seriesDataList[index]['series_id'],
+                  genre: List<String>.from(genre.map((item) => item.toString())),
+                  url: imageUrl,
+                  title: seriesDataList[index]['series_name'],
+                  rating: seriesDataList[index]['rating'],
+                  numberOfViews: seriesDataList[index]['total_views'],
+                  synopsis: seriesDataList[index]['about'],
+                ),
+              ),
             );
           },
-          child: seriesCard(
-            context: context,
-            imageUrl: imageUrl,
-            rating: seriesDataList[index]['rating'],
-            numberSeason: seriesDataList[index]['number_of_seasons'],
-            seriesName: seriesDataList[index]['series_name'],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: seriesCard(
+              context: context,
+              imageUrl: imageUrl,
+              rating: seriesDataList[index]['rating'],
+              numberSeason: seriesDataList[index]['number_of_seasons'],
+              seriesName: seriesDataList[index]['series_name'],
+            ),
           ),
         );
       },

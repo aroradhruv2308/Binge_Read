@@ -60,26 +60,26 @@ class _HomePageContentState extends State<HomePageContent> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     "Trending",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Lexend',
-                      fontSize: SizeConstants.twentyTwoPixel,
+                      fontSize: 18 * MediaQuery.of(context).textScaleFactor,
                       color: AppColors.whiteColor,
                     ),
                   ),
                   const SizedBox(height: 20),
                   seriesCarousel(homeScreenBloc: widget.homeScreenBloc, context: context, seriesDataList: trendingData),
-                  const SizedBox(height: 20),
-                  const Text(
+                  // const SizedBox(height: 20),
+                  Text(
                     "Most Viewed",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Lexend',
-                      fontSize: SizeConstants.twentyTwoPixel,
+                      fontSize: 18 * MediaQuery.of(context).textScaleFactor,
                       color: AppColors.whiteColor,
                     ),
                   ),
