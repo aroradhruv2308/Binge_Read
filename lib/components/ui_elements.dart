@@ -17,58 +17,62 @@ Widget seriesCard(
   return Container(
     padding: const EdgeInsets.only(right: 16),
     width: MediaQuery.of(context).size.width * 0.4,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.5,
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.contain,
+    child: Flexible(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: SizedBox(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Text(
-          seriesName,
-          style: const TextStyle(
-            color: AppColors.whiteColor,
-            fontFamily: "Lexend",
-            overflow: TextOverflow.ellipsis,
-            fontSize: 14,
+          const SizedBox(
+            height: 5,
           ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Seasons : $numberSeason",
-              style: const TextStyle(
-                  color: AppColors.greyColor, fontFamily: "Lexend", overflow: TextOverflow.ellipsis, fontSize: 14),
+          Text(
+            seriesName,
+            style: const TextStyle(
+              color: AppColors.whiteColor,
+              fontFamily: "Lexend",
+              overflow: TextOverflow.ellipsis,
+              fontSize: 14,
             ),
-            Row(
-              children: [
-                Text(
-                  "$rating",
-                  style: const TextStyle(
-                      color: AppColors.greyColor, fontFamily: "Lexend", overflow: TextOverflow.ellipsis, fontSize: 14),
-                ),
-                const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-              ],
-            ),
-          ],
-        )
-      ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Seasons : $numberSeason",
+                style: const TextStyle(
+                    color: AppColors.greyColor, fontFamily: "Lexend", overflow: TextOverflow.ellipsis, fontSize: 14),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "$rating",
+                    style: const TextStyle(
+                        color: AppColors.greyColor,
+                        fontFamily: "Lexend",
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 14),
+                  ),
+                  const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                ],
+              ),
+            ],
+          )
+        ],
+      ),
     ),
   );
 }

@@ -69,7 +69,7 @@ class ReaderScreenState extends State<ReaderScreen> {
                     selectWordOnDoubleTap: true,
                     child: HtmlWidget(
                       snapshot.data!,
-                      textStyle: const TextStyle(color: AppColors.greyColor),
+                      textStyle: const TextStyle(color: Color.fromARGB(255, 202, 205, 214)),
                       // Enable JavaScript execution in web view
                     ),
                   ),
