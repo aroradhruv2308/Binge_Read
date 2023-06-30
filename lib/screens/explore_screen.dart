@@ -84,7 +84,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'Lexend',
-                                          fontSize: SizeConstants.twentyTwoPixel,
+                                          fontSize: SizeConstants.eighteenPixel,
                                           color: AppColors.whiteColor,
                                         ),
                                       ),
