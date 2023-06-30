@@ -39,12 +39,14 @@ Future<List<Episode>> fetchEpisodes({required int seasonId, required int seriesI
         String? episodeName = episodeData?['episode_name'] as String?;
         int? episodeNumber = episodeData?['number'] as int?;
         String? episodeSummary = episodeData?['episode_summary'] as String?;
+        String? episodeUrl = episodeData?['episode_link'] as String?;
 
         Episode episodeDetail = Episode(
-          name: episodeName ?? '', // Assign an empty string if episodeName is null
-          number: episodeNumber ?? 0, // Assign 0 if episodeNumber is null
-          summary: episodeSummary ?? '', // Assign an empty string if episodeSummary is null
-        );
+            name: episodeName ?? '', // Assign an empty string if episodeName is null
+            number: episodeNumber ?? 0, // Assign 0 if episodeNumber is null
+            summary: episodeSummary ?? '',
+            htmlUrl: episodeUrl ?? "Html default Url" // Assign an empty string if episodeSummary is null
+            );
         listOfEpisodes.add(episodeDetail);
         // Do something with the episode data
       }
@@ -169,8 +171,6 @@ Future<Map<String, dynamic>?> fetchSeriesDataById(int seriesId) async {
 }
 
 Future<List<dynamic>> fetchIDsFromFirestore(String typeOfId) async {
-  // Fetch the array of IDs from Firestore
-  // Replace this with your actual Firestore logic
   CollectionReference userCollection = FirebaseFirestore.instance.collection('User-Data');
   try {
     if (Globals.userEmail != "") {
@@ -188,6 +188,4 @@ Future<List<dynamic>> fetchIDsFromFirestore(String typeOfId) async {
     print('Error fetching series data: $error');
     return [];
   }
-  await Future.delayed(Duration(seconds: 2)); // Simulating a delay
-  return [4, 1, 2, 3, 4, 1];
 }

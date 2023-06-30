@@ -146,6 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await Globals.userLoginService!.updateUserDetails(Globals.userEmail, userDetails);
                 updateUserNameByEmail(Globals.userEmail, userInput);
                 googleAuthBloc.add(const ChangeDisplayName());
+
                 // Return the userInput when dialog is closed
               },
               child: const Text(

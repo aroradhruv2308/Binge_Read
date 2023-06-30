@@ -1,9 +1,8 @@
-// ignore_for_file: must_be_immutable, library_private_types_in_public_api
-
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 import 'package:binge_read/db/query.dart';
+import 'package:binge_read/screens/episode_reader_screen.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -212,10 +211,21 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
 }
 
 Widget episodeCard(
-    {required int seriesId, required String episodeName, required int episodeNumber, required String episodeSummary}) {
+    {required BuildContext context,
+    required int seriesId,
+    required String episodeName,
+    required int episodeNumber,
+    required String episodeSummary,
+    required String episodeUrl}) {
   return InkWell(
-    onDoubleTap: () async {
-      await Globals.userAppDataService?.incrementReadCount(seriesId.toString());
+    onDoubleTap: () {
+      // here we will open the episode screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReaderScreen(url: episodeUrl),
+        ),
+      );
     },
     child: ExpansionTile(
       backgroundColor: AppColors.navBarColor,
@@ -225,11 +235,6 @@ Widget episodeCard(
       collapsedIconColor: AppColors.greyColor,
       iconColor: AppColors.glowGreen,
       collapsedTextColor: AppColors.whiteColor,
-      trailing: IconButton(
-        iconSize: 16,
-        icon: const Icon(Icons.arrow_forward_ios),
-        onPressed: () {},
-      ),
       childrenPadding: EdgeInsets.zero,
       title: Text(
         "Episode $episodeNumber : $episodeName",
@@ -241,12 +246,17 @@ Widget episodeCard(
         ),
       ),
       children: <Widget>[
-        ListTile(
-          title: Text(
-            episodeSummary,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: const TextStyle(fontWeight: FontWeight.w100, color: AppColors.greyColor, fontFamily: 'Lexend'),
+        InkWell(
+          onTap: () {
+            // here we will open the episode screen
+          },
+          child: ListTile(
+            title: Text(
+              episodeSummary,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: const TextStyle(fontWeight: FontWeight.w100, color: AppColors.greyColor, fontFamily: 'Lexend'),
+            ),
           ),
         )
       ],

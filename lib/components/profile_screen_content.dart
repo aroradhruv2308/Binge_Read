@@ -4,6 +4,7 @@ import 'package:binge_read/Utils/util_functions.dart';
 import 'package:binge_read/bloc/authentication_bloc/bloc/google_authentication_bloc.dart';
 import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/db/query.dart';
+import 'package:binge_read/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,7 +34,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}'); // Show an error message if an error occurs
             } else {
-              final Map<String, dynamic> userData = snapshot.data.data();
+              final Map<String, dynamic> userData = snapshot.data == null ? Map() : snapshot.data.data();
               final String userName = userData['name'];
               final String profilePicUrl = userData['photo-url'];
               final String email = userData['email'];
@@ -63,18 +64,15 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                         ),
                       ),
                     ]),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 100, // Adjust the width and height according to your preference
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: AppColors.greyColor,
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: NetworkImage(profilePicUrl),
-                            fit: BoxFit.cover,
-                          ),
+                    Container(
+                      width: 100, // Adjust the width and height according to your preference
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: AppColors.greyColor,
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage(profilePicUrl),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -82,42 +80,48 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                       height: 20,
                     ),
                     Center(
-                      child: BlocBuilder<GoogleAuthenticationBloc, GoogleAuthenticationState>(
-                        bloc: widget.googleAuthBloc,
-                        builder: (context, state) {
-                          if (state is DisplayNameChange) {
-                            return Text(
-                              Globals.userDisplayName,
-                              style: const TextStyle(
-                                  fontFamily: 'Lexend',
-                                  color: AppColors.whiteColor,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20),
-                            );
-                          }
-                          return Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 40),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            BlocBuilder<GoogleAuthenticationBloc, GoogleAuthenticationState>(
+                              bloc: widget.googleAuthBloc,
+                              builder: (context, state) {
+                                String nameFromEvent = "";
+                                if (state is DisplayNameChange) {
+                                  nameFromEvent = Globals.userDisplayName;
+
+                                  return Text(
+                                    nameFromEvent == "" ? capitalizeWords(userName) : nameFromEvent,
+                                    style: const TextStyle(
+                                        fontFamily: 'Lexend',
+                                        color: AppColors.whiteColor,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18),
+                                  );
+                                }
+                                return Text(
                                   capitalizeWords(userName),
                                   style: const TextStyle(
                                       fontFamily: 'Lexend',
                                       color: AppColors.whiteColor,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 18),
-                                ),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      size: 18,
-                                      color: Colors.greenAccent,
-                                    ))
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        },
+                            IconButton(
+                                onPressed: () {
+                                  showNameChangeDilogue(context);
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  size: 18,
+                                  color: AppColors.glowGreen,
+                                ))
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -228,5 +232,68 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
             }
           },
         ));
+  }
+
+  Future<dynamic> showNameChangeDilogue(BuildContext context) {
+    return showDialog(
+      barrierColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        String userInput = ''; // Variable to store user input
+
+        return AlertDialog(
+          backgroundColor: AppColors.dilogueBoxColor,
+          shadowColor: AppColors.backgroundColor,
+          surfaceTintColor: AppColors.backgroundColor, // Set the desired background color
+          title: const Text(
+            'What should we call you?',
+            style: TextStyle(
+              color: AppColors.whiteColor,
+              fontFamily: 'Lexend',
+              fontSize: 18,
+            ),
+          ),
+          content: TextField(
+            style: const TextStyle(color: AppColors.greyColor, fontFamily: 'Lexend'),
+            cursorColor: AppColors.glowGreen,
+            maxLength: 15, // Set the desired maximum length
+            onChanged: (value) {
+              userInput = value; // Update the userInput variable as the user types
+            },
+            decoration: const InputDecoration(
+                focusColor: AppColors.glowGreen,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.glowGreen), // Set the desired underline color
+                ),
+                hintText: 'Type Here',
+                hintStyle:
+                    TextStyle(color: AppColors.darkGreyColor), // Text to display when character limit is exceeded
+                counterStyle: TextStyle(color: Colors.green, fontFamily: 'Lexend', fontSize: 16),
+                semanticCounterText: "word limit exeeded" // Set the desired color for the word counter
+                ),
+          ),
+
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(userInput);
+                Globals.userDisplayName = userInput;
+                Globals.userName = userInput;
+                User userDetails = User(Globals.userEmail, userInput);
+                await Globals.userLoginService!.updateUserDetails(Globals.userEmail, userDetails);
+                updateUserNameByEmail(Globals.userEmail, userInput);
+                widget.googleAuthBloc.add(const ChangeDisplayName());
+
+                // Return the userInput when dialog is closed
+              },
+              child: const Text(
+                'Submit',
+                style: TextStyle(color: AppColors.glowGreen, fontSize: 16),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
