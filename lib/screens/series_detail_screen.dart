@@ -355,11 +355,12 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                               (index) => Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: episodeCard(
-                                  seriesId: widget.seriesId,
-                                  episodeName: episodes[index].name,
-                                  episodeSummary: episodes[index].summary,
-                                  episodeNumber: index + 1,
-                                ),
+                                    context: context,
+                                    seriesId: widget.seriesId,
+                                    episodeName: episodes[index].name,
+                                    episodeSummary: episodes[index].summary,
+                                    episodeNumber: index + 1,
+                                    episodeUrl: episodes[index].htmlUrl),
                               ),
                             ),
                           );

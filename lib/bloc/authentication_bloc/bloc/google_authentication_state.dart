@@ -33,3 +33,8 @@ class GoogleAuthenticationFaliure extends GoogleAuthenticationState {
   // TODO: implement props
   List<Object?> get props => [];
 }
+
+class TemporaryState extends GoogleAuthenticationState {
+  @override
+  List<Object?> get props => [];
+}

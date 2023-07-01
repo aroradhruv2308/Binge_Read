@@ -86,6 +86,14 @@ flutter:
       fonts:
         - asset: fonts/Lexend-Regular.ttf
 
+    - family: Source Serif Pro
+      fonts:
+        - asset: fonts/SourceSerifPro-Bold.ttf
+        - asset: fonts/SourceSerifPro-Regular.otf
+        - asset: fonts/SourceSerifPro-Semibold.otf
+
+        
+
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/anime_avatar2.jpg
