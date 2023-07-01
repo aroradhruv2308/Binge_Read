@@ -12,7 +12,7 @@ Widget seriesCarousel({
   required List<dynamic> seriesDataList,
 }) {
   return SizedBox(
-    height: 200,
+    height: MediaQuery.of(context).size.height * 0.2,
     child: ListView.builder(
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
@@ -38,7 +38,7 @@ Widget seriesCarousel({
             );
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: seriesCard(
               context: context,
               imageUrl: imageUrl,

@@ -21,13 +21,13 @@ Widget seriesCard(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.5,
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
             child: Image.network(
+              width: double.infinity,
               imageUrl,
-              fit: BoxFit.contain,
+              fit: BoxFit.fill,
             ),
           ),
         ),
@@ -50,16 +50,24 @@ Widget seriesCard(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Seasons : $numberSeason",
+              "Seasons: $numberSeason",
               style: const TextStyle(
-                  color: AppColors.greyColor, fontFamily: "Lexend", overflow: TextOverflow.ellipsis, fontSize: 14),
+                color: AppColors.greyColor,
+                fontFamily: "Lexend",
+                overflow: TextOverflow.ellipsis,
+                fontSize: 14,
+              ),
             ),
             Row(
               children: [
                 Text(
                   "$rating",
                   style: const TextStyle(
-                      color: AppColors.greyColor, fontFamily: "Lexend", overflow: TextOverflow.ellipsis, fontSize: 14),
+                    color: AppColors.greyColor,
+                    fontFamily: "Lexend",
+                    overflow: TextOverflow.ellipsis,
+                    fontSize: 14,
+                  ),
                 ),
                 const Icon(
                   Icons.star,
@@ -68,7 +76,7 @@ Widget seriesCard(
               ],
             ),
           ],
-        )
+        ),
       ],
     ),
   );
