@@ -142,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.of(context).pop(userInput);
                 Globals.userDisplayName = userInput;
                 Globals.userName = userInput;
-                User userDetails = User(Globals.userEmail, userInput);
+                User userDetails = User(Globals.userEmail, userInput, Globals.profilePictureUrl);
                 await Globals.userLoginService!.updateUserDetails(Globals.userEmail, userDetails);
                 updateUserNameByEmail(Globals.userEmail, userInput);
                 googleAuthBloc.add(const ChangeDisplayName());

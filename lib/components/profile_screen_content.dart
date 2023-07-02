@@ -34,10 +34,12 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}'); // Show an error message if an error occurs
             } else {
-              final Map<String, dynamic> userData = snapshot.data == null ? Map() : snapshot.data.data();
+              final Map<String, dynamic> userData = snapshot.data.data();
               final String userName = userData['name'];
-              final String profilePicUrl = userData['photo-url'];
+              final String profilePicUrl = userData['photo-url'] ??
+                  "https://firebasestorage.googleapis.com/v0/b/binge-read-2326.appspot.com/o/AppData%2FProfilePictures%2FProfile-Pic-2.jpg?alt=media&token=eac6fad0-2b6f-4211-b1f3-c68af9c1b7ff";
               final String email = userData['email'];
+              Globals.profilePictureUrl = profilePicUrl;
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,7 +73,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                         color: AppColors.greyColor,
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(profilePicUrl),
+                          image: NetworkImage(Globals.profilePictureUrl),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -279,7 +281,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                 Navigator.of(context).pop(userInput);
                 Globals.userDisplayName = userInput;
                 Globals.userName = userInput;
-                User userDetails = User(Globals.userEmail, userInput);
+                User userDetails = User(Globals.userEmail, userInput, Globals.profilePictureUrl);
                 await Globals.userLoginService!.updateUserDetails(Globals.userEmail, userDetails);
                 updateUserNameByEmail(Globals.userEmail, userInput);
                 widget.googleAuthBloc.add(const ChangeDisplayName());

@@ -1,7 +1,10 @@
 // ignore_for_file: unused_import
 
+import 'dart:math';
+
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/db/appDto.dart';
+import 'package:binge_read/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -71,20 +74,42 @@ Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getBooksForAGenre() as
   return documents;
 }
 
-Future<void> addNewUser(Map<String, dynamic> data) async {
+Future<String> addUser(Map<String, dynamic> data) async {
   final String email = data['email'];
   final QuerySnapshot snapshot =
       await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
 
   if (snapshot.docs.isNotEmpty) {
-    return;
+    DocumentSnapshot firstDocument = snapshot.docs.first;
+    var profilePhoto = firstDocument['photo-url'];
+    return profilePhoto;
   }
 
+  // this will get executed user object was not present in firestore
   try {
+    String imageUrl = "";
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('App-Data').get();
+    dynamic documents = snapshot.docs;
+
+    if (documents.length > 0) {
+      var firstDocument = documents[0] as QueryDocumentSnapshot<Object?>;
+      var appData = firstDocument.data() as Map<String, dynamic>?;
+      if (appData != null) {
+        Map<String, dynamic> profilePictures = appData['profile_pictures'];
+        Random random = Random();
+        int randomIndex = random.nextInt(profilePictures.length);
+        String randomKey = profilePictures.keys.elementAt(randomIndex);
+        String? randomImage = profilePictures[randomKey];
+        imageUrl = randomImage ?? "";
+        data["photo-url"] = randomImage;
+      }
+    }
     await FirebaseFirestore.instance.collection('User-Data').add(data);
     print('New user added successfully!');
+    return imageUrl;
   } catch (error) {
     print('Error adding new user: $error');
+    return "";
   }
 }
 

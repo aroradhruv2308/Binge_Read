@@ -1,4 +1,5 @@
 import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatefulWidget {
@@ -27,12 +28,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
             child: Container(
               width: 60, // Adjust the width and height according to your preference
               height: 60,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.cyan,
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage('images/anime_avatar2.jpg'),
-                  fit: BoxFit.cover,
+                  image: NetworkImage(Globals.profilePictureUrl),
+                  fit: BoxFit.contain,
                 ),
               ),
             )),
