@@ -63,8 +63,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Expanded(
                         child: TextField(
+                          style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w300),
                           decoration: InputDecoration(
-                            hintText: 'Search Your Series..',
+                            hintText: 'Search Your Series',
+                            hintStyle: TextStyle(fontFamily: 'Lexend'),
                             border: InputBorder.none,
                           ),
                         ),

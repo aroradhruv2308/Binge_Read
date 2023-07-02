@@ -72,7 +72,6 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: MainScreen(index: 0),
-        // home: MyHtmlScreen(),
       ),
     );
   }

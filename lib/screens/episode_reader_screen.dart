@@ -1,6 +1,6 @@
 import 'package:binge_read/Utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
@@ -17,8 +17,6 @@ class ReaderScreen extends StatefulWidget {
 }
 
 class ReaderScreenState extends State<ReaderScreen> {
-  double baseFontSize = 16.0; // Base font size
-  double fontSizeMultiplier = 1.0; // Font size multiplier
   Future<String> getHtmlStringFromFirebaseStorage(String url) async {
     final response = await http.get(Uri.parse(url));
     final document = htmlparser.parse(response.bodyBytes, encoding: 'utf-8');
@@ -36,7 +34,6 @@ class ReaderScreenState extends State<ReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("It is new build!");
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -48,17 +45,6 @@ class ReaderScreenState extends State<ReaderScreen> {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.text_decrease,
-              size: 20,
-            ),
-            onPressed: () {
-              // Handle the onPressed event for the trailing icon
-            },
-          ),
-        ],
         backgroundColor: AppColors.backgroundColor,
         elevation: 0,
       ),
