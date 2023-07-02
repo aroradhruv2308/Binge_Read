@@ -37,17 +37,17 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
       Map<String, dynamic> userData = {
         'name': googleUser.displayName,
         'email': googleUser.email,
-        'photo-url': googleUser.photoUrl,
         // Add more fields as needed
       };
 
-      await addNewUser(userData);
-      Globals.userName = userData['name'];
       String? name = userData['name'];
       String? email = userData['email'];
       Globals.userEmail = userData['email'];
+      Globals.userName = userData['name'];
+      String imageUrl = await addUser(userData);
+      Globals.profilePictureUrl = imageUrl;
+      User userDetails = User(email!, name!, imageUrl);
 
-      User userDetails = User(email!, name!);
       await Globals.userLoginService!.addUserDetails(email, userDetails);
       Globals.isLogin = true;
       emit(GoogleAuthenticationSuccess(googleUser));
@@ -58,7 +58,7 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
 
   Future<void> _handleSignOut(SignOutEvent event, Emitter<GoogleAuthenticationState> emit) async {
     await _googleSignIn.signOut();
-    await Globals.userLoginService?.updateUserDetails(Globals.userEmail, User("", ""));
+    await Globals.userLoginService?.deleteUserDetails(Globals.userEmail);
     Globals.userEmail = "";
     Globals.userName = "Reader";
     Globals.isLogin = false;

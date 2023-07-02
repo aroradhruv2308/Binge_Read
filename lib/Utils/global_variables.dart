@@ -5,11 +5,12 @@ import 'package:logger/logger.dart';
 class Globals {
   static bool isLogin = false;
   static String userName = "Reader";
-  static String userEmail = "not present";
+  static String userEmail = "";
   static UserLoginService? userLoginService;
   static UserAppDataService? userAppDataService;
   static Map<String, int> seriesReadCount = {};
   static String userDisplayName = "";
+  static String profilePictureUrl = "";
 }
 
 final Logger logger = Logger();

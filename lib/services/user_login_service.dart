@@ -29,6 +29,10 @@ class UserLoginService {
     await _userDetails.put(key, user);
   }
 
+  Future<void> deleteUserDetails(String key) async {
+    await _userDetails.delete(key);
+  }
+
   Future<void> updateUserDetails(String key, User updatedUser) async {
     if (_userDetails.containsKey(key)) {
       await _userDetails.put(key, updatedUser);

@@ -40,11 +40,16 @@ Future<void> initializeApp() async {
   await Globals.userAppDataService?.init();
   User? userDetails = await Globals.userLoginService?.getUserDetails();
 
-  if (userDetails != null) {
+// if user has previously logged in to the app
+// data is there in the hive
+  if (userDetails != null && userDetails.userEmail != "") {
     Globals.userName = userDetails.userId;
     Globals.userEmail = userDetails.userEmail;
+    Globals.profilePictureUrl = userDetails.imageUrl;
     Globals.isLogin = true;
   }
+
+// if user's last state was not logged In
 
   // Update total view count of series data from last
   // session. This can happen if user visited some episodes

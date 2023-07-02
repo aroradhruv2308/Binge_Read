@@ -7,8 +7,10 @@ class User {
   final String userEmail;
   @HiveField(1)
   final String userId;
+  @HiveField(2)
+  final String imageUrl;
 
-  User(this.userEmail, this.userId);
+  User(this.userEmail, this.userId, this.imageUrl);
 }
 
 @HiveType(typeId: 2)
