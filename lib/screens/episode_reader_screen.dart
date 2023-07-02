@@ -1,6 +1,6 @@
 import 'package:binge_read/Utils/constants.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
@@ -17,6 +17,8 @@ class ReaderScreen extends StatefulWidget {
 }
 
 class ReaderScreenState extends State<ReaderScreen> {
+  double baseFontSize = 16.0; // Base font size
+  double fontSizeMultiplier = 1.0; // Font size multiplier
   Future<String> getHtmlStringFromFirebaseStorage(String url) async {
     final response = await http.get(Uri.parse(url));
     final document = htmlparser.parse(response.bodyBytes, encoding: 'utf-8');
@@ -34,23 +36,31 @@ class ReaderScreenState extends State<ReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("It is new build!");
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(
-            Icons.clear_rounded,
+            Icons.arrow_back,
             size: 20,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.text_decrease,
+              size: 20,
+            ),
+            onPressed: () {
+              // Handle the onPressed event for the trailing icon
+            },
+          ),
+        ],
         backgroundColor: AppColors.backgroundColor,
         elevation: 0,
-        title: const Text(
-          "Html Screen",
-          style: TextStyle(fontFamily: 'Lexend', fontSize: 18, fontWeight: FontWeight.normal),
-        ),
       ),
       body: FutureBuilder<String>(
         future: _htmlContent,
@@ -64,13 +74,14 @@ class ReaderScreenState extends State<ReaderScreen> {
               child: Container(
                 color: AppColors.backgroundColor,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                  padding: const EdgeInsets.fromLTRB(28, 5, 28, 24),
                   child: Selectable(
                     selectWordOnDoubleTap: true,
                     child: HtmlWidget(
                       snapshot.data!,
-                      textStyle: const TextStyle(color: Color.fromARGB(255, 202, 205, 214)),
-                      // Enable JavaScript execution in web view
+                      textStyle: const TextStyle(
+                        color: Color.fromARGB(255, 202, 205, 214),
+                      ),
                     ),
                   ),
                 ),
