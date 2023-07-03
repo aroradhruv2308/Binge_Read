@@ -356,6 +356,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: episodeCard(
                                     context: context,
+                                    episodes: episodes,
                                     seriesId: widget.seriesId,
                                     episodeName: episodes[index].name,
                                     episodeSummary: episodes[index].summary,

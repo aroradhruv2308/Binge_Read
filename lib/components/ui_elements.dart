@@ -1,6 +1,7 @@
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
+import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:binge_read/screens/episode_reader_screen.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -198,6 +199,7 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
 
 Widget episodeCard(
     {required BuildContext context,
+    required List<Episode> episodes,
     required int seriesId,
     required String episodeName,
     required int episodeNumber,
@@ -209,7 +211,7 @@ Widget episodeCard(
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ReaderScreen(url: episodeUrl),
+          builder: (context) => ReaderScreen(url: episodeUrl, episodeNumber: episodeNumber, episodes: episodes),
         ),
       );
     },

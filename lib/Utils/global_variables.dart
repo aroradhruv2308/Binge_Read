@@ -11,6 +11,7 @@ class Globals {
   static Map<String, int> seriesReadCount = {};
   static String userDisplayName = "";
   static String profilePictureUrl = "";
+  static bool isLightMode = false;
 }
 
 final Logger logger = Logger();
