@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAllSeries() async {
+  print("I am getting called hehe!");
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Series').get();
 
   dynamic documents = querySnapshot.docs;

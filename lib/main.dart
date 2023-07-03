@@ -9,13 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-
-import 'db/query.dart';
 import 'screens/build_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeApp();
+  await initializeApp(); // 0.26 seconds
   runApp(const MyApp());
 }
 
@@ -48,8 +46,6 @@ Future<void> initializeApp() async {
     Globals.profilePictureUrl = userDetails.imageUrl;
     Globals.isLogin = true;
   }
-
-// if user's last state was not logged In
 
   // Update total view count of series data from last
   // session. This can happen if user visited some episodes

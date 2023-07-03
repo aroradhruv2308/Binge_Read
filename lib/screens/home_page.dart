@@ -1,6 +1,5 @@
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
-import 'package:binge_read/bloc/general_bloc/bloc/user_data_bloc.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
 import 'package:binge_read/components/custom_appbar.dart';
 import 'package:binge_read/components/home_page_content.dart';
