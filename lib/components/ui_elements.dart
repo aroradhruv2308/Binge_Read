@@ -1,5 +1,4 @@
 import 'package:binge_read/Utils/constants.dart';
-import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:binge_read/screens/episode_reader_screen.dart';
@@ -7,13 +6,15 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-Widget seriesCard(
-    {required BuildContext context,
-    String imageUrl = "",
-    String seriesName = "",
-    double rating = 0.0,
-    int numberSeason = 0}) {
+Widget seriesCard({
+  required BuildContext context,
+  String imageUrl = "",
+  String seriesName = "",
+  double rating = 0.0,
+  int numberSeason = 0,
+}) {
   return Container(
     padding: const EdgeInsets.only(right: 16),
     width: MediaQuery.of(context).size.width * 0.4,
@@ -23,11 +24,24 @@ Widget seriesCard(
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.network(
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
               width: double.infinity,
-              imageUrl,
               fit: BoxFit.fill,
+              errorWidget: (context, url, error) => const Icon(Icons.error), // Optional error widget
             ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Text(
+          seriesName,
+          style: const TextStyle(
+            color: AppColors.whiteColor,
+            fontFamily: "Lexend",
+            overflow: TextOverflow.ellipsis,
+            fontSize: SizeConstants.fourteenPixel,
           ),
         ),
         const SizedBox(
@@ -42,7 +56,7 @@ Widget seriesCard(
                 color: AppColors.greyColor,
                 fontFamily: "Lexend",
                 overflow: TextOverflow.ellipsis,
-                fontSize: 14,
+                fontSize: SizeConstants.fourteenPixel,
               ),
             ),
             Row(
@@ -53,7 +67,7 @@ Widget seriesCard(
                     color: AppColors.greyColor,
                     fontFamily: "Lexend",
                     overflow: TextOverflow.ellipsis,
-                    fontSize: 14,
+                    fontSize: SizeConstants.fourteenPixel,
                   ),
                 ),
                 const Icon(
@@ -79,7 +93,10 @@ Widget expandableText({String text = "Data has'nt arrived yet", double textHeigh
     trimMode: TrimMode.Line,
     trimCollapsedText: 'Show more',
     trimExpandedText: ' Show less',
-    moreStyle: const TextStyle(fontSize: 18, color: AppColors.glowGreen),
+    moreStyle: const TextStyle(
+      fontSize: SizeConstants.eighteenPixel,
+      color: AppColors.glowGreen,
+    ),
     delimiterStyle: const TextStyle(color: AppColors.glowGreen),
     colorClickableText: AppColors.glowGreen,
   );
@@ -122,7 +139,7 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
               child: Text(
                 'Season 1',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: SizeConstants.fourteenPixel,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Lexend',
                   color: AppColors.whiteColor,
@@ -138,7 +155,7 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
                   child: Text(
                     "Season: $item",
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: SizeConstants.fourteenPixel,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -196,13 +213,14 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
   }
 }
 
-Widget episodeCard(
-    {required BuildContext context,
-    required int seriesId,
-    required String episodeName,
-    required int episodeNumber,
-    required String episodeSummary,
-    required String episodeUrl}) {
+Widget episodeCard({
+  required BuildContext context,
+  required int seriesId,
+  required String episodeName,
+  required int episodeNumber,
+  required String episodeSummary,
+  required String episodeUrl,
+}) {
   return InkWell(
     onDoubleTap: () {
       // here we will open the episode screen
@@ -226,7 +244,7 @@ Widget episodeCard(
         "Episode $episodeNumber : $episodeName",
         style: const TextStyle(
           overflow: TextOverflow.ellipsis,
-          fontSize: 16.0,
+          fontSize: SizeConstants.fourteenPixel,
           fontWeight: FontWeight.bold,
           fontFamily: 'Lexend',
         ),
@@ -304,7 +322,7 @@ Widget customListTile({int id = 1}) {
                       Text(
                         snapshot.data?['series_name'],
                         style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: SizeConstants.fourteenPixel,
                             fontFamily: 'Lexend',
                             color: AppColors.whiteColor,
                             overflow: TextOverflow.ellipsis),
@@ -325,7 +343,7 @@ Widget customListTile({int id = 1}) {
                                       color: AppColors.greyColor,
                                       fontFamily: "Lexend",
                                       overflow: TextOverflow.ellipsis,
-                                      fontSize: SizeConstants.sixteenPixel),
+                                      fontSize: SizeConstants.fourteenPixel),
                                 ),
                                 const SizedBox(
                                   width: 4,
@@ -343,7 +361,7 @@ Widget customListTile({int id = 1}) {
                             child: Text(
                               "Seasons: ${snapshot.data?['number_of_seasons']}",
                               style: const TextStyle(
-                                  fontSize: 14,
+                                  fontSize: SizeConstants.fourteenPixel,
                                   fontFamily: 'Lexend',
                                   color: AppColors.greyColor,
                                   overflow: TextOverflow.ellipsis),
@@ -369,7 +387,11 @@ Widget buildListView(List<dynamic> ids) {
       padding: EdgeInsets.all(16.0),
       child: Text(
         "Found No List Yet",
-        style: TextStyle(color: AppColors.greyColor, fontFamily: 'Lexend', fontSize: 16),
+        style: TextStyle(
+          color: AppColors.greyColor,
+          fontFamily: 'Lexend',
+          fontSize: SizeConstants.fourteenPixel,
+        ),
       ),
     );
   }

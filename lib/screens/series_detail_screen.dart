@@ -207,7 +207,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                                       color: AppColors.greyColor,
                                       fontFamily: "Lexend",
                                       overflow: TextOverflow.ellipsis,
-                                      fontSize: SizeConstants.sixteenPixel,
+                                      fontSize: SizeConstants.fourteenPixel,
                                     ),
                                   ),
                                 ),
@@ -225,7 +225,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                                     style: const TextStyle(
                                       color: AppColors.greyColor,
                                       fontFamily: "Lexend",
-                                      fontSize: SizeConstants.sixteenPixel,
+                                      fontSize: SizeConstants.fourteenPixel,
                                     ),
                                   ),
                                 ),
