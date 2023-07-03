@@ -214,7 +214,6 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
   }
 }
 
-<<<<<<< HEAD
 Widget episodeCard(
     {required BuildContext context,
     required List<Episode> episodes,
@@ -223,16 +222,6 @@ Widget episodeCard(
     required int episodeNumber,
     required String episodeSummary,
     required String episodeUrl}) {
-=======
-Widget episodeCard({
-  required BuildContext context,
-  required int seriesId,
-  required String episodeName,
-  required int episodeNumber,
-  required String episodeSummary,
-  required String episodeUrl,
-}) {
->>>>>>> b2295c58d9be2c2e2f515beb7e3021a61d0f157f
   return InkWell(
     onDoubleTap: () {
       // here we will open the episode screen
