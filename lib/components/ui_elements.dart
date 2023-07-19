@@ -1,8 +1,12 @@
+import 'dart:ui';
+
 import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:binge_read/screens/episode_reader_screen.dart';
+import 'package:blur/blur.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -401,7 +405,55 @@ Widget buildListView(List<dynamic> ids) {
     itemCount: ids.length,
     itemBuilder: (BuildContext context, int index) {
       int id = ids[index];
+      logger.e(id);
       return customListTile(id: id);
     },
+  );
+}
+
+Widget screenDetailCard(BuildContext context, {String seriesName = "Un-Titled"}) {
+  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.5,
+        child: Text(
+          seriesName,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.left,
+          style: const TextStyle(
+            fontFamily: 'Lexend',
+            color: AppColors.whiteColor,
+            fontWeight: FontWeight.w100,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    ),
+    Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.5,
+        child: Text(
+          seriesName,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.left,
+          style: const TextStyle(
+            fontFamily: 'Lexend',
+            color: AppColors.whiteColor,
+            fontWeight: FontWeight.w100,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    ),
+  ]).frosted(
+    height: 100,
+    frostOpacity: 0.2,
+    blur: 15,
+    frostColor: const Color.fromARGB(255, 12, 14, 19),
+    borderRadius: const BorderRadius.all(Radius.circular(10)),
   );
 }
