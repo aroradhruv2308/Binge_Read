@@ -1,8 +1,12 @@
+import 'dart:ui';
+
 import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:binge_read/screens/episode_reader_screen.dart';
+import 'package:blur/blur.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -418,6 +422,7 @@ Widget buildListView(List<dynamic> ids) {
     itemCount: ids.length,
     itemBuilder: (BuildContext context, int index) {
       int id = ids[index];
+      logger.e(id);
       return customListTile(id: id);
     },
   );
