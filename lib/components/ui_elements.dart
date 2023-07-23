@@ -7,6 +7,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
+// ignore: depend_on_referenced_packages
 import 'package:cached_network_image/cached_network_image.dart';
 
 Widget seriesCard({
@@ -29,7 +30,9 @@ Widget seriesCard({
               imageUrl: imageUrl,
               width: double.infinity,
               fit: BoxFit.fill,
-              errorWidget: (context, url, error) => const Icon(Icons.error), // Optional error widget
+              errorWidget: (context, url, error) => const Icon(
+                Icons.error,
+              ),
             ),
           ),
         ),
@@ -87,17 +90,15 @@ Widget seriesCard({
 Widget expandableText({String text = "Data has'nt arrived yet", double textHeight = 20}) {
   return ReadMoreText(
     text,
-    trimLines: (textHeight / 18).floor(), // Adjust the line height according to your font size
-    style: GoogleFonts.lato(
-      textStyle: const TextStyle(color: AppColors.greyColor, fontSize: 18),
+    trimLines: (textHeight / 12).floor(),
+    style: const TextStyle(
+      color: AppColors.greyColor,
+      fontSize: SizeConstants.twelvePixel,
+      fontFamily: "Lexend",
     ),
     trimMode: TrimMode.Line,
     trimCollapsedText: 'Show more',
     trimExpandedText: ' Show less',
-    moreStyle: const TextStyle(
-      fontSize: SizeConstants.eighteenPixel,
-      color: AppColors.glowGreen,
-    ),
     delimiterStyle: const TextStyle(color: AppColors.glowGreen),
     colorClickableText: AppColors.glowGreen,
   );
@@ -134,7 +135,7 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
         hint: const Row(
           children: [
             SizedBox(
-              width: 4,
+              width: 3,
             ),
             Expanded(
               child: Text(
@@ -156,9 +157,10 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
                   child: Text(
                     "Season: $item",
                     style: const TextStyle(
-                      fontSize: SizeConstants.fourteenPixel,
+                      fontSize: SizeConstants.twelvePixel,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
+                      fontFamily: "Lexend",
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -214,16 +216,17 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
   }
 }
 
-Widget episodeCard(
-    {required BuildContext context,
-    required List<Episode> episodes,
-    required int seriesId,
-    required String episodeName,
-    required int episodeNumber,
-    required String episodeSummary,
-    required String episodeUrl}) {
+Widget episodeCard({
+  required BuildContext context,
+  required List<Episode> episodes,
+  required int seriesId,
+  required String episodeName,
+  required int episodeNumber,
+  required String episodeSummary,
+  required String episodeUrl,
+}) {
   return InkWell(
-    onDoubleTap: () {
+    onTap: () {
       // here we will open the episode screen
       Navigator.push(
         context,
@@ -232,39 +235,53 @@ Widget episodeCard(
         ),
       );
     },
-    child: ExpansionTile(
-      backgroundColor: AppColors.navBarColor,
-      collapsedBackgroundColor: AppColors.navBarColor,
-      expandedAlignment: Alignment.topCenter,
-      textColor: AppColors.glowGreen,
-      collapsedIconColor: AppColors.greyColor,
-      iconColor: AppColors.glowGreen,
-      collapsedTextColor: AppColors.whiteColor,
-      childrenPadding: EdgeInsets.zero,
-      title: Text(
-        "Episode $episodeNumber : $episodeName",
-        style: const TextStyle(
-          overflow: TextOverflow.ellipsis,
-          fontSize: SizeConstants.fourteenPixel,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Lexend',
+    child: Card(
+      color: AppColors.navBarColor,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Episode $episodeNumber",
+                  style: const TextStyle(
+                    fontSize: SizeConstants.twelvePixel,
+                    fontFamily: "Lexend",
+                    color: AppColors.greyColor,
+                  ),
+                ),
+                const Text(
+                  "1.3 mins",
+                  style: TextStyle(
+                    fontSize: SizeConstants.twelvePixel,
+                    fontFamily: "Lexend",
+                    color: AppColors.greyColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Text(
+                episodeName,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: SizeConstants.fourteenPixel,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Lexend",
+                  color: AppColors.whiteColor,
+                ),
+              ),
+            )
+          ],
         ),
       ),
-      children: <Widget>[
-        InkWell(
-          onTap: () {
-            // here we will open the episode screen
-          },
-          child: ListTile(
-            title: Text(
-              episodeSummary,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style: const TextStyle(fontWeight: FontWeight.w100, color: AppColors.greyColor, fontFamily: 'Lexend'),
-            ),
-          ),
-        )
-      ],
     ),
   );
 }
@@ -404,4 +421,27 @@ Widget buildListView(List<dynamic> ids) {
       return customListTile(id: id);
     },
   );
+}
+
+class DashedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.grey // Adjust the color of the dashed line as needed
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.square;
+
+    const dashWidth = 5;
+    const dashSpace = 5;
+    var startY = 0.0;
+    while (startY < size.height) {
+      canvas.drawLine(Offset(0, startY), Offset(0, startY + dashWidth), paint);
+      startY += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
 }

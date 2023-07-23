@@ -1,6 +1,5 @@
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
-
 import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/db/query.dart';
@@ -8,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SeriesDetailScreen extends StatefulWidget {
-  String title, url;
-  double rating;
-  int numberOfViews;
-  List<String> genre;
-  int seriesId;
-  String synopsis;
-  SeriesDetailScreen(
+  final String title, url;
+  final double rating;
+  final int numberOfViews;
+  final List<String> genre;
+  final int seriesId;
+  final String synopsis;
+  const SeriesDetailScreen(
       {super.key,
       this.synopsis = "No Synopsis",
       this.title = "Untitled",
@@ -98,18 +97,21 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
         ],
         title: const Text(
           "Detail",
-          style: TextStyle(fontFamily: 'Lexend'),
+          style: TextStyle(
+            fontFamily: 'Lexend',
+            fontSize: SizeConstants.eighteenPixel,
+          ),
           overflow: TextOverflow.ellipsis,
         ),
         backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back_ios_new_outlined, // Replace with your desired icon
-            color: Colors.white, // Replace with your desired color
+            Icons.arrow_back_ios_new_outlined,
+            color: Colors.white,
+            size: SizeConstants.eighteenPixel,
           ),
           onPressed: () {
-            // Handle back button press
             Navigator.pop(context);
           },
         ),
@@ -129,21 +131,24 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      height: MediaQuery.of(context).size.height * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.35,
+                      height: MediaQuery.of(context).size.height * 0.2,
                       child: Stack(children: [
-                        Container(
-                          color: AppColors.backgroundColor,
-                          width: MediaQuery.of(context).size.width * 0.45,
-                        ),
                         Positioned(
-                            top: 10,
-                            left: 10,
-                            child: Container(
-                              color: AppColors.glowGreen,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              height: MediaQuery.of(context).size.height * 0.2,
-                            )),
+                          top: 10,
+                          left: 10,
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: Container(
+                                color: AppColors.glowGreen,
+                                width: MediaQuery.of(context).size.width * 0.35 - 10,
+                                height: MediaQuery.of(context).size.height * 0.2 - 10,
+                              ),
+                            ),
+                          ),
+                        ),
                         Positioned(
                           top: 15,
                           left: 5,
@@ -156,18 +161,18 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                                     color: AppColors.backgroundColor,
                                     spreadRadius: 2,
                                     blurRadius: 5,
-                                    offset: Offset(0, 3), // horizontal, vertical offset
+                                    offset: Offset(0, 3),
                                   ),
                                 ],
                               ),
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              child: Image.network(
-                                widget.url,
-                                fit: BoxFit.fill,
-
-                                // Replace with your image URL
-                                // Adjust the image fit as per your need
+                              width: MediaQuery.of(context).size.width * 0.35 - 10,
+                              height: MediaQuery.of(context).size.height * 0.2 - 15,
+                              child: AspectRatio(
+                                aspectRatio: 4 / 3,
+                                child: Image.network(
+                                  widget.url,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
@@ -177,102 +182,96 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                   ),
                 ),
                 Flexible(
-                    flex: 4,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      child: Flex(
-                        direction: Axis.vertical,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            widget.title,
-                            maxLines: 2,
-                            style: const TextStyle(fontFamily: 'Lexend', color: AppColors.whiteColor, fontSize: 18),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Flex(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              direction: Axis.horizontal,
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                    "${widget.rating} ",
-                                    style: const TextStyle(
-                                      color: AppColors.greyColor,
-                                      fontFamily: "Lexend",
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: SizeConstants.fourteenPixel,
-                                    ),
-                                  ),
-                                ),
-                                const Flexible(
-                                  flex: 1,
-                                  child: Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 5,
-                                  child: Text(
-                                    "  Total Views: ${widget.numberOfViews} ",
-                                    style: const TextStyle(
-                                      color: AppColors.greyColor,
-                                      fontFamily: "Lexend",
-                                      fontSize: SizeConstants.fourteenPixel,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height * 0.12,
-                            ),
-                            child: Container(
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              child: Scrollbar(
-                                isAlwaysShown: true,
-                                controller: ScrollController(),
-                                child: SingleChildScrollView(
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  child: Wrap(
-                                    spacing: 12.0,
-                                    runSpacing: 12.0,
-                                    children: widget.genre.map((item) {
-                                      return ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          maxWidth: widget.genre.length < 2
-                                              ? MediaQuery.of(context).size.width * 0.3
-                                              : MediaQuery.of(context).size.width * 0.22,
-                                        ),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          color: AppColors.glowGreen,
-                                          child: Text(
-                                            item,
-                                            style: const TextStyle(fontSize: 16),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
+                  flex: 5,
+                  child: Flex(
+                    direction: Axis.vertical,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        widget.title,
+                        maxLines: 2,
+                        style: const TextStyle(
+                          fontFamily: 'Lexend',
+                          color: AppColors.whiteColor,
+                          fontSize: SizeConstants.sixteenPixel,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Flex(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          direction: Axis.horizontal,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Text(
+                                "${widget.rating} ",
+                                style: const TextStyle(
+                                  color: AppColors.greyColor,
+                                  fontFamily: "Lexend",
+                                  overflow: TextOverflow.ellipsis,
+                                  fontSize: SizeConstants.twelvePixel,
                                 ),
                               ),
                             ),
-                          )
-                        ],
+                            const Flexible(
+                              flex: 1,
+                              child: Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: SizeConstants.sixteenPixel,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 5,
+                              child: Text(
+                                "  Total Views: ${widget.numberOfViews} ",
+                                style: const TextStyle(
+                                  color: AppColors.greyColor,
+                                  fontFamily: "Lexend",
+                                  fontSize: SizeConstants.twelvePixel,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.12,
+                          child: Wrap(
+                            spacing: 12.0,
+                            runSpacing: 12.0,
+                            children: widget.genre.map((item) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: AppColors.glowGreen,
+                                ),
+                                padding: const EdgeInsets.all(4),
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: SizeConstants.twelvePixel,
+                                    fontFamily: "Lexend",
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
             const SizedBox(
@@ -284,19 +283,19 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                 'Synopsis',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontFamily: 'Lexend',
                   color: AppColors.whiteColor,
-                  fontWeight: FontWeight.w100,
-                  fontSize: 20,
+                  fontSize: SizeConstants.sixteenPixel,
+                  fontFamily: "Lexend",
                 ),
               ),
             ),
             Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: expandableText(
-                  text: widget.synopsis,
-                  textHeight: 100,
-                )),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: expandableText(
+                text: widget.synopsis,
+                textHeight: 40,
+              ),
+            ),
             const SizedBox(
               height: 40,
             ),
@@ -312,64 +311,82 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                     style: TextStyle(
                       fontFamily: 'Lexend',
                       color: AppColors.whiteColor,
-                      fontWeight: FontWeight.w100,
-                      fontSize: 20,
+                      fontSize: SizeConstants.sixteenPixel,
                     ),
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(right: 14),
-                    child: SeasonDropdown(
-                      numberOfSeasons: 4,
-                      delailScreenBloc: delailScreenBloc,
-                    )),
+                  padding: const EdgeInsets.only(right: 14),
+                  child: SeasonDropdown(
+                    numberOfSeasons: 4,
+                    delailScreenBloc: delailScreenBloc,
+                  ),
+                ),
               ],
             ),
             Padding(
-                padding: const EdgeInsets.fromLTRB(5, 20, 0, 0),
-                child: BlocBuilder<BookDetailScreenBloc, BookDetailScreenState>(
-                  bloc: delailScreenBloc,
-                  builder: (context, state) {
-                    if (state is ShowSeasonEpisodesState) {
-                      currentSeason = state.seasonNumber ?? 1;
-                    }
-                    delailScreenBloc.add(ResetEvent());
-                    return FutureBuilder<List<Episode>>(
-                      future: fetchEpisodes(
-                          seriesId: widget.seriesId,
-                          seasonId: currentSeason), // Replace with your actual future that fetches the episodes
-                      builder: (BuildContext context, AsyncSnapshot<List<Episode>> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          // While waiting for the future to complete
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          // If an error occurred
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          // If the future completed successfully
-                          final episodes = snapshot.data!; // Access the episodes from the snapshot
-
-                          return Column(
-                            children: List.generate(
-                              episodes.length,
-                              (index) => Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: episodeCard(
-                                    context: context,
-                                    episodes: episodes,
-                                    seriesId: widget.seriesId,
-                                    episodeName: episodes[index].name,
-                                    episodeSummary: episodes[index].summary,
-                                    episodeNumber: index + 1,
-                                    episodeUrl: episodes[index].htmlUrl),
+              padding: const EdgeInsets.fromLTRB(5, 20, 0, 0),
+              child: BlocBuilder<BookDetailScreenBloc, BookDetailScreenState>(
+                bloc: delailScreenBloc,
+                builder: (context, state) {
+                  if (state is ShowSeasonEpisodesState) {
+                    currentSeason = state.seasonNumber ?? 1;
+                  }
+                  delailScreenBloc.add(ResetEvent());
+                  return FutureBuilder<List<Episode>>(
+                    future: fetchEpisodes(seriesId: widget.seriesId, seasonId: currentSeason),
+                    builder: (BuildContext context, AsyncSnapshot<List<Episode>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        final episodes = snapshot.data!;
+                        return Column(
+                          children: List.generate(
+                            episodes.length,
+                            (index) => Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.navBarColor,
+                                    ),
+                                    child: const Icon(
+                                      Icons.done_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.05,
+                                  ),
+                                  Expanded(
+                                    child: episodeCard(
+                                        context: context,
+                                        episodes: episodes,
+                                        seriesId: widget.seriesId,
+                                        episodeName: episodes[index].name,
+                                        episodeSummary: episodes[index].summary,
+                                        episodeNumber: index + 1,
+                                        episodeUrl: episodes[index].htmlUrl),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.05,
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        }
-                      },
-                    );
-                  },
-                ))
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
