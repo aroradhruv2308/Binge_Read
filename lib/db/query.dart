@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAllSeries() async {
-  print("I am getting called hehe!");
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Series').get();
 
   dynamic documents = querySnapshot.docs;
@@ -19,11 +18,11 @@ Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAllSeries() async {
 }
 
 Future<List<Episode>> fetchEpisodes({required int seasonId, required int seriesId}) async {
-  // get to the particular series
+  // Get to the particular series
   QuerySnapshot querySnapshot =
       await FirebaseFirestore.instance.collection('Series').where('series_id', isEqualTo: seriesId).limit(1).get();
   if (querySnapshot.docs.isNotEmpty) {
-    //get to the particular season
+    // Get to the particular season
     DocumentSnapshot seriesDocument = querySnapshot.docs[0];
     CollectionReference seasonsCollection = seriesDocument.reference.collection('seasons');
 
@@ -44,15 +43,23 @@ Future<List<Episode>> fetchEpisodes({required int seasonId, required int seriesI
         int? episodeNumber = episodeData?['number'] as int?;
         String? episodeSummary = episodeData?['episode_summary'] as String?;
         String? episodeUrl = episodeData?['episode_link'] as String?;
+        // TODO1: Get episodeId as well (episode id will be unique, it will be a
+        // combination of series, season and episode.)
+        // String? episodeId = episodeData?['episode_id'] as String?
+
+        // TODO2: Once you get the episodeId then you already have userdata,
+        // which you fetched while starting the app. Get percentage read for
+        // this episode from userdata. (First check how user data format will
+        // look like.)
+
+        // TODO3: Add pctRead in Episode class.
 
         Episode episodeDetail = Episode(
-            name: episodeName ?? '', // Assign an empty string if episodeName is null
-            number: episodeNumber ?? 0, // Assign 0 if episodeNumber is null
+            name: episodeName ?? '',
+            number: episodeNumber ?? 0,
             summary: episodeSummary ?? '',
-            htmlUrl: episodeUrl ?? "Html default Url" // Assign an empty string if episodeSummary is null
-            );
+            htmlUrl: episodeUrl ?? "Html default Url");
         listOfEpisodes.add(episodeDetail);
-        // Do something with the episode data
       }
 
       return listOfEpisodes;
@@ -86,7 +93,7 @@ Future<String> addUser(Map<String, dynamic> data) async {
     return profilePhoto;
   }
 
-  // this will get executed user object was not present in firestore
+  // This will get executed user object was not present in firestore
   try {
     String imageUrl = "";
     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('App-Data').get();
@@ -114,11 +121,48 @@ Future<String> addUser(Map<String, dynamic> data) async {
   }
 }
 
-Future<DocumentSnapshot?> getUserByEmail(String email) async {
+Future<Map<String, dynamic>?> getUserData(String email) async {
+  // User data should look like below:
+  // {
+  //   "email": EMAIL,
+  //   "name": NAME,
+  //   "photo-url": PHOTO-URL,
+  //   "app_data": {
+  //      "episodes":{
+  //          "S3SN1EP1":{
+  //              "pct_read": 80,
+  //            },
+  //          "S3SN1EP2": {
+  //              "pct_read": 30
+  //            },
+  //        }
+  //    }
+  // }
+
+  // Create empty map to store user data in above format.
+  Map<String, dynamic> userData = {};
+
+  // Get email, name and photo-url from User-Data collection.
   final QuerySnapshot snapshot =
       await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
+
   if (snapshot.docs.isNotEmpty) {
-    return snapshot.docs.first;
+    userData = snapshot.docs.first.data() as Map<String, dynamic>;
+
+    // Get subcollection app-data content as well, this will contain
+    // episodes related data as per user usage of app.
+    final appDataCollection = snapshot.docs.first.reference.collection('app_data');
+
+    // app_data collection only have one document which contains all the episode
+    // related meta-data.
+    final episodeDataSnapshot = await appDataCollection.limit(1).get();
+
+    if (episodeDataSnapshot.docs.isNotEmpty) {
+      final episodeData = episodeDataSnapshot.docs.first.data();
+      userData = {...userData, ...episodeData};
+    }
+
+    return userData;
   }
 
   return null;

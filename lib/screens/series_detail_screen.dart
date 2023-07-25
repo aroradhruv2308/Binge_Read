@@ -3,7 +3,6 @@ import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_
 import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/db/query.dart';
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -350,6 +349,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Row(
                                 children: [
+                                  // TODO4: Handle this icon based on pctRead attribute.
                                   Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: const BoxDecoration(

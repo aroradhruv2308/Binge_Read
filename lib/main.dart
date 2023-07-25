@@ -1,5 +1,6 @@
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/general_bloc/bloc/user_data_bloc.dart';
+import 'package:binge_read/db/query.dart';
 import 'package:binge_read/firebase_options.dart';
 import 'package:binge_read/models/user.dart';
 import 'package:binge_read/services/user_app_data_service.dart';
@@ -38,13 +39,23 @@ Future<void> initializeApp() async {
   await Globals.userAppDataService?.init();
   User? userDetails = await Globals.userLoginService?.getUserDetails();
 
-// if user has previously logged in to the app
-// data is there in the hive
+  // If user has previously logged in to the app
+  // data is there in the hive
   if (userDetails != null && userDetails.userEmail != "") {
     Globals.userName = userDetails.userId;
     Globals.userEmail = userDetails.userEmail;
     Globals.profilePictureUrl = userDetails.imageUrl;
     Globals.isLogin = true;
+  }
+
+  // Get userdata details from DB, if user already logged-in.
+  // In user details we will get all episodes/reads related
+  // data for instance percentage read, bookmarked series,
+  // bookmarked episode etc.
+  if (Globals.userEmail != "") {
+    // Get user episodes data from DB.
+    var userData = await getUserData("shagunarora261@gmail.com");
+    Globals.userMetaData = userData;
   }
 
   // Update total view count of series data from last

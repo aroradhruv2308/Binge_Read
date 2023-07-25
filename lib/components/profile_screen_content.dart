@@ -27,7 +27,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
     return Container(
         color: AppColors.backgroundColor,
         child: FutureBuilder(
-          future: getUserByEmail(Globals.userEmail), // Replace `fetchData()` with your asynchronous function call
+          future: getUserData(Globals.userEmail),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator(); // Show a loading indicator while waiting for data

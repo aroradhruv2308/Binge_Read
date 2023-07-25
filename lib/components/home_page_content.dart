@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:binge_read/Utils/constants.dart';
-import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/Utils/util_functions.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
 import 'package:binge_read/db/query.dart';
@@ -75,7 +74,11 @@ class _HomePageContentState extends State<HomePageContent> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  seriesCarousel(homeScreenBloc: widget.homeScreenBloc, context: context, seriesDataList: trendingData),
+                  seriesCarousel(
+                    homeScreenBloc: widget.homeScreenBloc,
+                    context: context,
+                    seriesDataList: trendingData,
+                  ),
                   const SizedBox(height: 30),
                   Text(
                     "Most Viewed",
@@ -89,7 +92,10 @@ class _HomePageContentState extends State<HomePageContent> {
                   ),
                   const SizedBox(height: 20),
                   seriesCarousel(
-                      homeScreenBloc: widget.homeScreenBloc, context: context, seriesDataList: mostViewedData),
+                    homeScreenBloc: widget.homeScreenBloc,
+                    context: context,
+                    seriesDataList: mostViewedData,
+                  ),
                   const SizedBox(height: 20),
                   Text(
                     "Top Picks",
@@ -102,7 +108,11 @@ class _HomePageContentState extends State<HomePageContent> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  seriesCarousel(homeScreenBloc: widget.homeScreenBloc, context: context, seriesDataList: topPicksData),
+                  seriesCarousel(
+                    homeScreenBloc: widget.homeScreenBloc,
+                    context: context,
+                    seriesDataList: topPicksData,
+                  ),
                   const SizedBox(height: 30),
                   const SizedBox(height: 20),
                   Text(
@@ -117,7 +127,10 @@ class _HomePageContentState extends State<HomePageContent> {
                   ),
                   const SizedBox(height: 20),
                   seriesCarousel(
-                      homeScreenBloc: widget.homeScreenBloc, context: context, seriesDataList: newReleaseData),
+                    homeScreenBloc: widget.homeScreenBloc,
+                    context: context,
+                    seriesDataList: newReleaseData,
+                  ),
                   const SizedBox(height: 30),
                   const SizedBox(height: 20),
                   Text(
@@ -132,7 +145,10 @@ class _HomePageContentState extends State<HomePageContent> {
                   ),
                   const SizedBox(height: 20),
                   seriesCarousel(
-                      homeScreenBloc: widget.homeScreenBloc, context: context, seriesDataList: topSearchedData),
+                    homeScreenBloc: widget.homeScreenBloc,
+                    context: context,
+                    seriesDataList: topSearchedData,
+                  ),
                   const SizedBox(height: 30),
                 ],
               ),

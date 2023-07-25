@@ -9,6 +9,7 @@ class Globals {
   static UserLoginService? userLoginService;
   static UserAppDataService? userAppDataService;
   static Map<String, int> seriesReadCount = {};
+  static Map<String, dynamic>? userMetaData = {};
   static String userDisplayName = "";
   static String profilePictureUrl = "";
   static bool isLightMode = false;

@@ -8,8 +8,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 class UserAppDataService {
   late Box<AppData> _userAppData;
   bool _isTimerRunning = false;
-  // ignore: unused_field
-  Timer? _updateTimer;
 
   Future<void> init() async {
     _userAppData = await Hive.openBox<AppData>('userAppData');
@@ -32,12 +30,6 @@ class UserAppDataService {
   }
 
   void startTimer() {
-    _updateTimer = Timer(const Duration(seconds: 20), () {
-      if (_isTimerRunning) {
-        _isTimerRunning = false;
-        batchUpdateReadCounts();
-      }
-    });
     _isTimerRunning = true;
   }
 
