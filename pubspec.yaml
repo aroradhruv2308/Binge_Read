@@ -60,6 +60,7 @@ dependencies:
   build_runner: ^2.4.5
   sign_in_button: ^3.2.0
   blur: ^3.1.0
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

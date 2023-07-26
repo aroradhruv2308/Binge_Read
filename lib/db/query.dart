@@ -43,22 +43,17 @@ Future<List<Episode>> fetchEpisodes({required int seasonId, required int seriesI
         int? episodeNumber = episodeData?['number'] as int?;
         String? episodeSummary = episodeData?['episode_summary'] as String?;
         String? episodeUrl = episodeData?['episode_link'] as String?;
-        // TODO1: Get episodeId as well (episode id will be unique, it will be a
-        // combination of series, season and episode.)
-        // String? episodeId = episodeData?['episode_id'] as String?
-
-        // TODO2: Once you get the episodeId then you already have userdata,
-        // which you fetched while starting the app. Get percentage read for
-        // this episode from userdata. (First check how user data format will
-        // look like.)
+        int? pctRead = Globals.userMetaData?["episodes"]?[episodeData?["episode_id"]]["pct_read"];
 
         // TODO3: Add pctRead in Episode class.
 
         Episode episodeDetail = Episode(
-            name: episodeName ?? '',
-            number: episodeNumber ?? 0,
-            summary: episodeSummary ?? '',
-            htmlUrl: episodeUrl ?? "Html default Url");
+          name: episodeName ?? '',
+          number: episodeNumber ?? 0,
+          summary: episodeSummary ?? '',
+          htmlUrl: episodeUrl ?? "Html default Url",
+          pctRead: pctRead ?? 0,
+        );
         listOfEpisodes.add(episodeDetail);
       }
 

@@ -350,16 +350,8 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                               child: Row(
                                 children: [
                                   // TODO4: Handle this icon based on pctRead attribute.
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.navBarColor,
-                                    ),
-                                    child: const Icon(
-                                      Icons.done_rounded,
-                                      color: Colors.white,
-                                    ),
+                                  EpisodePercentIndicatorIcon(
+                                    pctRead: episodes[index].pctRead,
                                   ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width * 0.05,

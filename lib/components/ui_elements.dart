@@ -10,6 +10,7 @@ import 'package:blur/blur.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:readmore/readmore.dart';
 // ignore: depend_on_referenced_packages
 import 'package:cached_network_image/cached_network_image.dart';
@@ -448,5 +449,80 @@ class DashedLinePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return false;
+  }
+}
+
+class EpisodePercentIndicatorIcon extends StatelessWidget {
+  final int pctRead;
+
+  const EpisodePercentIndicatorIcon({
+    super.key,
+    required this.pctRead,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // If percentage read is 0 then show book menu icon.
+    // if (pctRead == 0) {
+    //   return Container(
+    //     padding: const EdgeInsets.all(8),
+    //     decoration: const BoxDecoration(
+    //       shape: BoxShape.circle,
+    //       color: AppColors.navBarColor,
+    //     ),
+    //     child: const Icon(
+    //       Icons.menu_book_rounded,
+    //       color: AppColors.whiteColor,
+    //     ),
+    //   );
+    // }
+
+    // If percentage read is 100, show done_rounded button.
+    if (pctRead == 100) {
+      return Container(
+        padding: const EdgeInsets.all(8),
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.navBarColor,
+        ),
+        child: const Icon(
+          Icons.done_rounded,
+          color: AppColors.whiteColor,
+        ),
+      );
+    }
+
+    // Otherwise return Icon showing percentage in circle using
+    // CircularPercentIndicator.
+    return CircularPercentIndicator(
+      radius: 20.0,
+      lineWidth: 3.0,
+      percent: pctRead / 100,
+      center: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: pctRead.toString(),
+              style: const TextStyle(
+                color: AppColors.whiteColor,
+                fontSize: 10.0,
+                fontFamily: "Lexend",
+              ),
+            ),
+            const TextSpan(
+              text: "%",
+              style: TextStyle(
+                color: AppColors.whiteColor,
+                fontSize: 7.0,
+                fontFamily: "Lexend",
+              ),
+            ),
+          ],
+        ),
+      ),
+      progressColor: AppColors.greyColor,
+      backgroundColor: AppColors.darkGreyColor,
+      animation: true,
+    );
   }
 }
