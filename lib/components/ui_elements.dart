@@ -423,7 +423,6 @@ Widget buildListView(List<dynamic> ids) {
     itemCount: ids.length,
     itemBuilder: (BuildContext context, int index) {
       int id = ids[index];
-      logger.e(id);
       return customListTile(id: id);
     },
   );

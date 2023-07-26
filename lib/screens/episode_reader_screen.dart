@@ -1,18 +1,21 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as htmlparser;
 import 'package:selectable/selectable.dart';
+import 'dart:math';
 
+// ignore: must_be_immutable
 class ReaderScreen extends StatefulWidget {
   final String url;
   final int episodeNumber;
-  List<Episode> episodes;
+  final List<Episode> episodes;
 
   ReaderScreen({super.key, required this.url, required this.episodeNumber, required this.episodes});
   dom.Document htmlDocument = dom.Document();
@@ -30,17 +33,29 @@ class ReaderScreenState extends State<ReaderScreen> {
   }
 
   Future<String>? _htmlContent;
+  late int pctRead;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _htmlContent = getHtmlStringFromFirebaseStorage(widget.url);
+    pctRead = widget.episodes[widget.episodeNumber - 1].pctRead;
+    _scrollController.addListener(_calculatePercentageRead);
+  }
+
+  void _calculatePercentageRead() {
+    if (_scrollController.position.maxScrollExtent > 0) {
+      double currentPosition = _scrollController.position.pixels;
+      double maxScrollExtent = _scrollController.position.maxScrollExtent;
+      setState(() {
+        pctRead = max(pctRead, ((currentPosition / maxScrollExtent) * 100).round());
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    logger.e(widget.episodes);
-    logger.e(widget.episodeNumber);
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 4.0),
@@ -51,15 +66,15 @@ class ReaderScreenState extends State<ReaderScreen> {
             });
           },
           child: Container(
-            width: 50, // Adjust the width and height according to your preference
+            width: 50,
             height: 50,
             decoration: BoxDecoration(
               color: Colors.transparent,
               shape: BoxShape.circle,
               image: DecorationImage(
                 image: Globals.isLightMode == true
-                    ? AssetImage('images/light-dark-mode.png')
-                    : AssetImage('images/dark-light-mode.png'),
+                    ? const AssetImage('images/light-dark-mode.png')
+                    : const AssetImage('images/dark-light-mode.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -73,7 +88,7 @@ class ReaderScreenState extends State<ReaderScreen> {
               TextButton(
                 onPressed: (widget.episodeNumber != 1)
                     ? () {
-                        Navigator.pop(context); // Pops all screens until the first screen
+                        Navigator.pop(context);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -101,7 +116,7 @@ class ReaderScreenState extends State<ReaderScreen> {
               TextButton(
                 onPressed: (widget.episodeNumber != widget.episodes.length)
                     ? () {
-                        Navigator.pop(context); // Pops all screens until the first screen
+                        Navigator.pop(context);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -123,7 +138,7 @@ class ReaderScreenState extends State<ReaderScreen> {
                       fontSize: 16),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               )
             ],
@@ -148,9 +163,12 @@ class ReaderScreenState extends State<ReaderScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Error loading HTML content'));
+            return const Center(
+              child: Text('Error loading HTML content'),
+            );
           } else {
             return SingleChildScrollView(
+              controller: _scrollController,
               child: Container(
                 color: Globals.isLightMode == true ? AppColors.whiteColor : AppColors.backgroundColor,
                 child: Padding(
@@ -166,8 +184,14 @@ class ReaderScreenState extends State<ReaderScreen> {
                           fontFamily: 'Lexend',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
+                      ),
+                      Text(
+                        pctRead.toString(),
+                        style: const TextStyle(
+                          color: AppColors.whiteColor,
+                        ),
                       ),
                       Selectable(
                         selectWordOnDoubleTap: true,
