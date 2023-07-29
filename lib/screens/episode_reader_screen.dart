@@ -11,20 +11,29 @@ import 'package:html/parser.dart' as htmlparser;
 import 'package:selectable/selectable.dart';
 import 'dart:math';
 
+import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
+
+import '../db/query.dart';
+
 // ignore: must_be_immutable
 class ReaderScreen extends StatefulWidget {
   final String url;
   final int episodeNumber;
   final List<Episode> episodes;
 
-  ReaderScreen({super.key, required this.url, required this.episodeNumber, required this.episodes});
+  ReaderScreen({
+    super.key,
+    required this.url,
+    required this.episodeNumber,
+    required this.episodes,
+  });
   dom.Document htmlDocument = dom.Document();
 
   @override
   State<ReaderScreen> createState() => ReaderScreenState();
 }
 
-class ReaderScreenState extends State<ReaderScreen> {
+class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver {
   Future<String> getHtmlStringFromFirebaseStorage(String url) async {
     final response = await http.get(Uri.parse(url));
     final document = htmlparser.parse(response.bodyBytes, encoding: 'utf-8');
@@ -41,7 +50,49 @@ class ReaderScreenState extends State<ReaderScreen> {
     super.initState();
     _htmlContent = getHtmlStringFromFirebaseStorage(widget.url);
     pctRead = widget.episodes[widget.episodeNumber - 1].pctRead;
+
+    // Adding listener to scroll event i.e. whenever user will
+    // scroll on the reader screen we will update percent read.
     _scrollController.addListener(_calculatePercentageRead);
+
+    // Register the class as observer for lifecycle methods.
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // This can happen when user presses home button to put the
+      // app in recents, then our app will be in pause state. We
+      // will update the calculated pctRead in DB.
+      _updatePctReadInDatabase();
+    }
+  }
+
+  @override
+  void dispose() {
+    // Remove this class as an observer when the widget is disposed.
+    WidgetsBinding.instance.removeObserver(this);
+
+    // Update percent Read if user navigates to back to previous screen.
+    _updatePctReadInDatabase();
+
+    super.dispose();
+  }
+
+  void _updatePctReadInDatabase() {
+    int currPctRead = widget.episodes[widget.episodeNumber - 1].pctRead;
+
+    // Update DB only if pctRead calculated not equal to currentPctRead i.e.
+    // the one which is already stored in db.
+    if (pctRead != currPctRead) {
+      String? episodeId = widget.episodes[widget.episodeNumber - 1].episodeId;
+      updatePctReadForEpisode(episodeId, pctRead);
+
+      // Update percent read in Globals user meta data as well for rendering
+      // correct data in app.
+      Globals.userMetaData?["episodes"]?[episodeId]["pct_read"] = pctRead;
+    }
   }
 
   void _calculatePercentageRead() {
@@ -187,18 +238,13 @@ class ReaderScreenState extends State<ReaderScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        pctRead.toString(),
-                        style: const TextStyle(
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
                       Selectable(
                         selectWordOnDoubleTap: true,
                         child: HtmlWidget(
                           snapshot.data!,
                           textStyle: TextStyle(
-                            color: Globals.isLightMode == false ? Color.fromARGB(255, 202, 205, 214) : Colors.black,
+                            color:
+                                Globals.isLightMode == false ? const Color.fromARGB(255, 202, 205, 214) : Colors.black,
                           ),
                         ),
                       ),

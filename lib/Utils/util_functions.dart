@@ -1,5 +1,3 @@
-import 'package:binge_read/Utils/global_variables.dart';
-
 String capitalizeWords(String input) {
   if (input.isEmpty) {
     return input;

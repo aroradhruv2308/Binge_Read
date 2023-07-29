@@ -10,6 +10,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../Utils/global_variables.dart';
+
 Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAllSeries() async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Series').get();
 
@@ -43,9 +45,8 @@ Future<List<Episode>> fetchEpisodes({required int seasonId, required int seriesI
         int? episodeNumber = episodeData?['number'] as int?;
         String? episodeSummary = episodeData?['episode_summary'] as String?;
         String? episodeUrl = episodeData?['episode_link'] as String?;
+        String? episodeId = episodeData?['episode_id'] as String?;
         int? pctRead = Globals.userMetaData?["episodes"]?[episodeData?["episode_id"]]["pct_read"];
-
-        // TODO3: Add pctRead in Episode class.
 
         Episode episodeDetail = Episode(
           name: episodeName ?? '',
@@ -53,6 +54,7 @@ Future<List<Episode>> fetchEpisodes({required int seasonId, required int seriesI
           summary: episodeSummary ?? '',
           htmlUrl: episodeUrl ?? "Html default Url",
           pctRead: pctRead ?? 0,
+          episodeId: episodeId,
         );
         listOfEpisodes.add(episodeDetail);
       }
@@ -172,6 +174,31 @@ Future<void> updateUserNameByEmail(String email, String newName) async {
     final String documentId = userDocument.id;
 
     await FirebaseFirestore.instance.collection('User-Data').doc(documentId).update({'name': newName});
+  }
+}
+
+Future<void> updatePctReadForEpisode(String? episodeId, int pctRead) async {
+  final QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('User-Data')
+      .where('email', isEqualTo: Globals.userEmail)
+      .limit(1)
+      .get();
+
+  if (snapshot.docs.isNotEmpty) {
+    final appDataCollection = snapshot.docs.first.reference.collection('app_data');
+
+    // app_data collection only have one document which contains all the episode
+    // related meta-data.
+    final episodeDataSnapshot = await appDataCollection.limit(1).get();
+
+    if (episodeDataSnapshot.docs.isNotEmpty) {
+      final episodeDataDocRef = episodeDataSnapshot.docs.first.reference;
+
+      // Now, update the 'pct_read' field for the specified episodeId
+      episodeDataDocRef.update({
+        'episodes.$episodeId.pct_read': pctRead,
+      });
+    }
   }
 }
 

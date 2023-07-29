@@ -236,7 +236,11 @@ Widget episodeCard({
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ReaderScreen(url: episodeUrl, episodeNumber: episodeNumber, episodes: episodes),
+          builder: (context) => ReaderScreen(
+            url: episodeUrl,
+            episodeNumber: episodeNumber,
+            episodes: episodes,
+          ),
         ),
       );
     },

@@ -4,6 +4,7 @@ class Episode {
   final String summary;
   final String htmlUrl;
   final int pctRead;
+  final String? episodeId;
 
   Episode({
     this.name = "Temporary Name",
@@ -11,5 +12,6 @@ class Episode {
     this.summary = "temporary long text",
     this.htmlUrl = "here will be the url",
     this.pctRead = 0,
+    this.episodeId = "",
   });
 }
