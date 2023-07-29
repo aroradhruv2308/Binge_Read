@@ -46,7 +46,7 @@ Future<List<Episode>> fetchEpisodes({required int seasonId, required int seriesI
         String? episodeSummary = episodeData?['episode_summary'] as String?;
         String? episodeUrl = episodeData?['episode_link'] as String?;
         String? episodeId = episodeData?['episode_id'] as String?;
-        int? pctRead = Globals.userMetaData?["episodes"]?[episodeData?["episode_id"]]["pct_read"];
+        int? pctRead = Globals.userMetaData?["episodes"]?[episodeData?["episode_id"]]?["pct_read"];
 
         Episode episodeDetail = Episode(
           name: episodeName ?? '',

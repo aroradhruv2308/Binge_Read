@@ -54,7 +54,7 @@ Future<void> initializeApp() async {
   // bookmarked episode etc.
   if (Globals.userEmail != "") {
     // Get user episodes data from DB.
-    var userData = await getUserData("shagunarora261@gmail.com");
+    var userData = await getUserData(Globals.userEmail);
     Globals.userMetaData = userData;
   }
 
