@@ -230,66 +230,51 @@ Widget episodeCard({
   required String episodeSummary,
   required String episodeUrl,
 }) {
-  return InkWell(
-    onTap: () {
-      // here we will open the episode screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ReaderScreen(
-            url: episodeUrl,
-            episodeNumber: episodeNumber,
-            episodes: episodes,
-          ),
-        ),
-      );
-    },
-    child: Card(
-      color: AppColors.navBarColor,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Episode $episodeNumber",
-                  style: const TextStyle(
-                    fontSize: SizeConstants.twelvePixel,
-                    fontFamily: "Lexend",
-                    color: AppColors.greyColor,
-                  ),
-                ),
-                const Text(
-                  "1.3 mins",
-                  style: TextStyle(
-                    fontSize: SizeConstants.twelvePixel,
-                    fontFamily: "Lexend",
-                    color: AppColors.greyColor,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Text(
-                episodeName,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+  return Card(
+    color: AppColors.navBarColor,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Episode $episodeNumber",
                 style: const TextStyle(
-                  fontSize: SizeConstants.fourteenPixel,
-                  fontWeight: FontWeight.bold,
+                  fontSize: SizeConstants.twelvePixel,
                   fontFamily: "Lexend",
-                  color: AppColors.whiteColor,
+                  color: AppColors.greyColor,
                 ),
               ),
-            )
-          ],
-        ),
+              const Text(
+                "1.3 mins",
+                style: TextStyle(
+                  fontSize: SizeConstants.twelvePixel,
+                  fontFamily: "Lexend",
+                  color: AppColors.greyColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Text(
+              episodeName,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: SizeConstants.fourteenPixel,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Lexend",
+                color: AppColors.whiteColor,
+              ),
+            ),
+          )
+        ],
       ),
     ),
   );
