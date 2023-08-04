@@ -111,9 +111,15 @@ Widget expandableText({String text = "Data has'nt arrived yet", double textHeigh
 
 class SeasonDropdown extends StatefulWidget {
   final int numberOfSeasons;
-  BookDetailScreenBloc delailScreenBloc = BookDetailScreenBloc();
+  final int seriesId;
+  BookDetailScreenBloc detailScreenBloc;
 
-  SeasonDropdown({super.key, required this.numberOfSeasons, required this.delailScreenBloc});
+  SeasonDropdown({
+    super.key,
+    required this.seriesId,
+    required this.numberOfSeasons,
+    required this.detailScreenBloc,
+  });
 
   @override
   _SeasonDropdownState createState() => _SeasonDropdownState();
@@ -173,7 +179,16 @@ class _SeasonDropdownState extends State<SeasonDropdown> {
             .toList(),
         value: selectedValue,
         onChanged: (value) {
-          widget.delailScreenBloc.add(ShowSeasonEpisodesEvent(seasonNumber: value));
+          // Emit reset event before fetching season data to reset already
+          // applied state.
+          widget.detailScreenBloc.add(ResetEvent());
+
+          // Now trrigger SeasonEpisodeEvent, this will check if data already
+          // present in local storage then directly display data otherwise it
+          // will fetch data from db.
+          widget.detailScreenBloc.add(ShowSeasonEpisodesEvent(seasonNumber: value));
+
+          // Set state to change selected dropdown value in UI.
           setState(() {
             selectedValue = value;
           });

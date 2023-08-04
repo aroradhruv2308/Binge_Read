@@ -4,21 +4,31 @@ abstract class BookDetailScreenState extends Equatable {
   const BookDetailScreenState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class BookDetailScreenInitial extends BookDetailScreenState {}
 
-class ShowSeasonEpisodesState extends BookDetailScreenState {
-  int? seasonNumber;
-  ShowSeasonEpisodesState(this.seasonNumber);
-  bool get hasSeasonNumber => seasonNumber != null;
+// Initial state when user navigates to book detail screen.
+class InitialLoadState extends BookDetailScreenState {
+  final List<Episode>? episodes;
+  const InitialLoadState(this.episodes);
+
   @override
-  List<Object> get props => [hasSeasonNumber];
+  List<Object?> get props => [episodes];
+}
+
+// State changes when user change season_id from Season drop down.
+class ShowSeasonEpisodesState extends BookDetailScreenState {
+  final int seasonNumber;
+  final List<Episode>? episodes;
+
+  const ShowSeasonEpisodesState(this.seasonNumber, this.episodes);
+
+  @override
+  List<Object?> get props => [seasonNumber, episodes];
 }
 
 class ResetState extends BookDetailScreenState {
   const ResetState();
-  @override
-  List<Object> get props => [];
 }

@@ -33,7 +33,7 @@ class SeriesDetailScreen extends StatefulWidget {
 class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Color?> _colorAnimation;
-  late BookDetailScreenBloc delailScreenBloc;
+  late BookDetailScreenBloc detailScreenBloc;
   int currentSeason = 1;
   late List<Episode> episodes;
   bool isBookmarked = false;
@@ -41,6 +41,8 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
   @override
   void initState() {
     super.initState();
+
+    detailScreenBloc = BookDetailScreenBloc(widget.seriesId, currentSeason);
 
     _animationController = AnimationController(
       vsync: this,
@@ -68,12 +70,6 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
         _animationController.reverse();
       }
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    delailScreenBloc = BookDetailScreenBloc();
-    super.didChangeDependencies();
   }
 
   @override
@@ -318,8 +314,9 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                 Padding(
                   padding: const EdgeInsets.only(right: 14),
                   child: SeasonDropdown(
+                    seriesId: widget.seriesId,
                     numberOfSeasons: 4,
-                    delailScreenBloc: delailScreenBloc,
+                    detailScreenBloc: detailScreenBloc,
                   ),
                 ),
               ],
@@ -327,71 +324,62 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 20, 0, 0),
               child: BlocBuilder<BookDetailScreenBloc, BookDetailScreenState>(
-                bloc: delailScreenBloc,
+                bloc: detailScreenBloc,
                 builder: (context, state) {
                   if (state is ShowSeasonEpisodesState) {
                     currentSeason = state.seasonNumber ?? 1;
-                  }
-                  delailScreenBloc.add(ResetEvent());
-                  return FutureBuilder<List<Episode>>(
-                    future: fetchEpisodes(seriesId: widget.seriesId, seasonId: currentSeason),
-                    builder: (BuildContext context, AsyncSnapshot<List<Episode>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        final episodes = snapshot.data ?? this.episodes;
-                        return Column(
-                          children: List.generate(
-                            episodes.length,
-                            (index) => Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                              child: Row(
-                                children: [
-                                  EpisodePercentIndicatorIcon(
-                                    pctRead: episodes[index].pctRead,
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.05,
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        // Here we will open the episode screen
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ReaderScreen(
-                                              url: episodes[index].htmlUrl,
-                                              episodeNumber: index + 1,
-                                              episodes: episodes,
-                                            ),
-                                          ),
-                                        ).then((value) => setState(() => {}));
-                                      },
-                                      child: episodeCard(
-                                        context: context,
-                                        episodes: episodes,
-                                        seriesId: widget.seriesId,
-                                        episodeName: episodes[index].name,
-                                        episodeSummary: episodes[index].summary,
-                                        episodeNumber: index + 1,
-                                        episodeUrl: episodes[index].htmlUrl,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.05,
-                                  ),
-                                ],
+                    final episodes = state.episodes;
+
+                    return Column(
+                      children: List.generate(
+                        episodes!.length,
+                        (index) => Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                          child: Row(
+                            children: [
+                              EpisodePercentIndicatorIcon(
+                                pctRead: episodes[index].pctRead,
                               ),
-                            ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.05,
+                              ),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    // Here we will open the episode screen
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ReaderScreen(
+                                          url: episodes[index].htmlUrl,
+                                          episodeNumber: index + 1,
+                                          episodes: episodes,
+                                        ),
+                                      ),
+                                    ).then((value) => setState(() => {}));
+                                  },
+                                  child: episodeCard(
+                                    context: context,
+                                    episodes: episodes,
+                                    seriesId: widget.seriesId,
+                                    episodeName: episodes[index].name,
+                                    episodeSummary: episodes[index].summary,
+                                    episodeNumber: index + 1,
+                                    episodeUrl: episodes[index].htmlUrl,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.05,
+                              ),
+                            ],
                           ),
-                        );
-                      }
-                    },
-                  );
+                        ),
+                      ),
+                    );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
                 },
               ),
             ),
