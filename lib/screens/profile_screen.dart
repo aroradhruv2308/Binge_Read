@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 40,
               ),
-              Text(
+              const Text(
                 "Not Signed in Yet",
                 style: TextStyle(
                     color: AppColors.greyColor, fontSize: 24, fontFamily: 'Lexend', fontWeight: FontWeight.bold),
@@ -70,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ]);
           }
           if (state is GoogleAuthenticationLoading) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
           if (state is GoogleAuthenticationFaliure) {
             return const Center(

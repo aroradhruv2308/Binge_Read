@@ -34,7 +34,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}'); // Show an error message if an error occurs
             } else {
-              final Map<String, dynamic> userData = snapshot.data.data();
+              final Map<String, dynamic> userData = snapshot.data;
               final String userName = userData['name'];
               final String profilePicUrl = userData['photo-url'] ??
                   "https://firebasestorage.googleapis.com/v0/b/binge-read-2326.appspot.com/o/AppData%2FProfilePictures%2FProfile-Pic-2.jpg?alt=media&token=eac6fad0-2b6f-4211-b1f3-c68af9c1b7ff";
