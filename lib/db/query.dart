@@ -34,7 +34,7 @@ Future<List<Episode>> fetchEpisodes({required int seasonId, required int seriesI
       DocumentSnapshot seasonDocument = seasonQuerySnapshot.docs[0];
 
       CollectionReference episodesCollection = seasonDocument.reference.collection('episodes');
-      QuerySnapshot episodesQuerySnapshot = await episodesCollection.get();
+      QuerySnapshot episodesQuerySnapshot = await episodesCollection.orderBy('index').get();
 
       List<DocumentSnapshot> episodeDocuments = episodesQuerySnapshot.docs;
       List<Episode> listOfEpisodes = [];

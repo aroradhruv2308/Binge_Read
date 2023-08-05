@@ -41,7 +41,6 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
   @override
   void initState() {
     super.initState();
-
     detailScreenBloc = BookDetailScreenBloc(widget.seriesId, currentSeason);
 
     _animationController = AnimationController(
@@ -58,6 +57,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
   @override
   void dispose() {
     _animationController.dispose();
+    detailScreenBloc.close();
     super.dispose();
   }
 
@@ -353,6 +353,8 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                                         builder: (context) => ReaderScreen(
                                           url: episodes[index].htmlUrl,
                                           episodeNumber: index + 1,
+                                          seasonNumber: currentSeason,
+                                          detailScreenBloc: detailScreenBloc,
                                           episodes: episodes,
                                         ),
                                       ),

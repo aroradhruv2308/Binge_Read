@@ -3,7 +3,7 @@ class Episode {
   final int number;
   final String summary;
   final String htmlUrl;
-  final int pctRead;
+  int pctRead;
   final String? episodeId;
 
   Episode({

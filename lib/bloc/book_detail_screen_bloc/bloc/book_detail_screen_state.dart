@@ -29,6 +29,10 @@ class ShowSeasonEpisodesState extends BookDetailScreenState {
   List<Object?> get props => [seasonNumber, episodes];
 }
 
+class UpdatePercentReadState extends BookDetailScreenState {
+  const UpdatePercentReadState();
+}
+
 class ResetState extends BookDetailScreenState {
   const ResetState();
 }

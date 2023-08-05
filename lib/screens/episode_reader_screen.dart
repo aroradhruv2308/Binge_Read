@@ -19,12 +19,16 @@ import '../db/query.dart';
 class ReaderScreen extends StatefulWidget {
   final String url;
   final int episodeNumber;
+  final int seasonNumber;
+  final BookDetailScreenBloc detailScreenBloc;
   final List<Episode> episodes;
 
   ReaderScreen({
     super.key,
     required this.url,
     required this.episodeNumber,
+    required this.seasonNumber,
+    required this.detailScreenBloc,
     required this.episodes,
   });
   dom.Document htmlDocument = dom.Document();
@@ -89,9 +93,23 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
       String? episodeId = widget.episodes[widget.episodeNumber - 1].episodeId;
       updatePctReadForEpisode(episodeId, pctRead);
 
-      // Update percent read in Globals user meta data as well for rendering
-      // correct data in app.
+      // Before updating percentRead emit reset event, which will bring the
+      // bloc in loading state. After updating we will again trigger season
+      // episode event to display latest updated data.
+      widget.detailScreenBloc.add(ResetEvent());
+
+      // Update percent read in local data. We can update local episodes
+      // by triggering updatePercentRead event. Also update pctRead in
+      // Globals userMetaData as we only fetch userMeta data once, so we
+      // have to be consistent.
       Globals.userMetaData?["episodes"]?[episodeId]["pct_read"] = pctRead;
+      widget.detailScreenBloc.add(
+        UpdatePercentReadEvent(
+          seasonNumber: widget.seasonNumber,
+          episodeNumber: widget.episodeNumber,
+          percentRead: pctRead,
+        ),
+      );
     }
   }
 
@@ -146,6 +164,8 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
                             builder: (context) => ReaderScreen(
                                 url: widget.episodes[widget.episodeNumber - 2].htmlUrl,
                                 episodeNumber: widget.episodeNumber - 1,
+                                seasonNumber: widget.seasonNumber,
+                                detailScreenBloc: widget.detailScreenBloc,
                                 episodes: widget.episodes),
                           ),
                         );
@@ -174,6 +194,8 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
                             builder: (context) => ReaderScreen(
                                 url: widget.episodes[widget.episodeNumber].htmlUrl,
                                 episodeNumber: widget.episodeNumber + 1,
+                                seasonNumber: widget.seasonNumber,
+                                detailScreenBloc: widget.detailScreenBloc,
                                 episodes: widget.episodes),
                           ),
                         );
