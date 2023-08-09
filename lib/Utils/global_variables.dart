@@ -12,6 +12,7 @@ class Globals {
   static Map<String, dynamic>? userMetaData = {};
   static String userDisplayName = "";
   static String profilePictureUrl = "";
+  static String defaultProfilePicAssetPath = "images/default-profile-pic.jpg";
   static bool isLightMode = false;
 }
 

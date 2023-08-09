@@ -1,6 +1,6 @@
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/models/user.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 

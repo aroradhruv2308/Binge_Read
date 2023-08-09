@@ -31,10 +31,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
               decoration: BoxDecoration(
                 color: Colors.cyan,
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: NetworkImage(Globals.profilePictureUrl),
-                  fit: BoxFit.contain,
-                ),
+                image: Globals.isLogin
+                    ? DecorationImage(
+                        image: NetworkImage(Globals.profilePictureUrl),
+                        fit: BoxFit.contain,
+                      )
+                    : DecorationImage(
+                        image: AssetImage(Globals.defaultProfilePicAssetPath),
+                        fit: BoxFit.contain,
+                      ),
               ),
             )),
         // Add spacing between elements

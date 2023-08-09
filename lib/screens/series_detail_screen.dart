@@ -1,4 +1,5 @@
 import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/db/appDto.dart';
@@ -337,9 +338,14 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                           child: Row(
                             children: [
-                              EpisodePercentIndicatorIcon(
-                                pctRead: episodes[index].pctRead,
-                              ),
+                              Globals.isLogin
+                                  ? EpisodePercentIndicatorIcon(
+                                      pctRead: episodes[index].pctRead,
+                                    )
+                                  : const Icon(
+                                      Icons.menu_book_rounded,
+                                      color: AppColors.whiteColor,
+                                    ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.05,
                               ),

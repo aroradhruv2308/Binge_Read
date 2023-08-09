@@ -5,7 +5,6 @@ import 'package:binge_read/components/profile_screen_content.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:binge_read/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
@@ -44,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.cyan,
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: AssetImage('images/anime_avatar2.jpg'),
+                      image: AssetImage('images/default-profile-pic.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
