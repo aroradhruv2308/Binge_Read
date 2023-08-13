@@ -14,7 +14,7 @@ import 'screens/build_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeApp(); // 0.26 seconds
+  await initializeApp();
   runApp(const MyApp());
 }
 

@@ -4,6 +4,10 @@ abstract class GoogleAuthenticationEvent {
   const GoogleAuthenticationEvent();
 }
 
+class LoadingEvent extends GoogleAuthenticationEvent {
+  const LoadingEvent();
+}
+
 class SignInWithGoogleEvent extends GoogleAuthenticationEvent {
   const SignInWithGoogleEvent();
 }

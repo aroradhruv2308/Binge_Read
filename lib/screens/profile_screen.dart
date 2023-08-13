@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Center(
                 child: Container(
-                  width: 100, // Adjust the width and height according to your preference
+                  width: 100,
                   height: 100,
                   decoration: const BoxDecoration(
                     color: Colors.cyan,
@@ -55,7 +55,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const Text(
                 "Not Signed in Yet",
                 style: TextStyle(
-                    color: AppColors.greyColor, fontSize: 24, fontFamily: 'Lexend', fontWeight: FontWeight.bold),
+                  color: AppColors.greyColor,
+                  fontSize: 24,
+                  fontFamily: 'Lexend',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(
                 height: 40,
@@ -79,12 +83,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             );
           }
-          if (state is GoogleAuthenticationSuccess) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              // Show your dialog here
-              showNameDilogue(context);
-            });
-          }
           if (state is GoogleAuthenticationSuccess || Globals.isLogin == true) {
             return LoginUserProfileScreen(
               googleAuthBloc: googleAuthBloc,
@@ -93,69 +91,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return Container();
         },
       ),
-    );
-  }
-
-  Future<dynamic> showNameDilogue(BuildContext context) {
-    return showDialog(
-      barrierColor: Colors.transparent,
-      context: context,
-      builder: (BuildContext context) {
-        String userInput = ''; // Variable to store user input
-
-        return AlertDialog(
-          backgroundColor: AppColors.dilogueBoxColor,
-          shadowColor: AppColors.backgroundColor,
-          surfaceTintColor: AppColors.backgroundColor, // Set the desired background color
-          title: const Text(
-            'What should we call you?',
-            style: TextStyle(
-              color: AppColors.whiteColor,
-              fontFamily: 'Lexend',
-              fontSize: 18,
-            ),
-          ),
-          content: TextField(
-            style: const TextStyle(color: AppColors.greyColor, fontFamily: 'Lexend'),
-            cursorColor: AppColors.glowGreen,
-            maxLength: 15, // Set the desired maximum length
-            onChanged: (value) {
-              userInput = value; // Update the userInput variable as the user types
-            },
-            decoration: const InputDecoration(
-                focusColor: AppColors.glowGreen,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.glowGreen), // Set the desired underline color
-                ),
-                hintText: 'Type Here',
-                hintStyle:
-                    TextStyle(color: AppColors.darkGreyColor), // Text to display when character limit is exceeded
-                counterStyle: TextStyle(color: Colors.green, fontFamily: 'Lexend', fontSize: 16),
-                semanticCounterText: "word limit exeeded" // Set the desired color for the word counter
-                ),
-          ),
-
-          actions: [
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop(userInput);
-                Globals.userDisplayName = userInput;
-                Globals.userName = userInput;
-                User userDetails = User(Globals.userEmail, userInput, Globals.profilePictureUrl);
-                await Globals.userLoginService!.updateUserDetails(Globals.userEmail, userDetails);
-                updateUserNameByEmail(Globals.userEmail, userInput);
-                googleAuthBloc.add(const ChangeDisplayName());
-
-                // Return the userInput when dialog is closed
-              },
-              child: const Text(
-                'Submit',
-                style: TextStyle(color: AppColors.glowGreen, fontSize: 16),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }

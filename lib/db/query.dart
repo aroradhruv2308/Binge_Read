@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:binge_read/Utils/constants.dart';
 
 import '../Utils/global_variables.dart';
 
@@ -79,42 +80,59 @@ Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getBooksForAGenre() as
   return documents;
 }
 
-Future<String> addUser(Map<String, dynamic> data) async {
+Future<void> addUserInDBAndStoreInHive(Map<String, dynamic> data) async {
   final String email = data['email'];
+
   final QuerySnapshot snapshot =
       await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
 
-  if (snapshot.docs.isNotEmpty) {
-    DocumentSnapshot firstDocument = snapshot.docs.first;
-    var profilePhoto = firstDocument['photo-url'];
-    return profilePhoto;
-  }
+  // If user not present insert user details in db.
+  if (snapshot.docs.isEmpty) {
+    // This will get executed user object was not present in firestore
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('App-Data').get();
+      String imageUrl = avatarDefaultURL;
 
-  // This will get executed user object was not present in firestore
-  try {
-    String imageUrl = "";
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('App-Data').get();
-    dynamic documents = snapshot.docs;
+      if (snapshot.docs.isNotEmpty) {
+        dynamic document = snapshot.docs.first;
 
-    if (documents.length > 0) {
-      var firstDocument = documents[0] as QueryDocumentSnapshot<Object?>;
-      var appData = firstDocument.data() as Map<String, dynamic>?;
-      if (appData != null) {
-        Map<String, dynamic> profilePictures = appData['profile_pictures'];
-        Random random = Random();
-        int randomIndex = random.nextInt(profilePictures.length);
-        String randomKey = profilePictures.keys.elementAt(randomIndex);
-        String? randomImage = profilePictures[randomKey];
-        imageUrl = randomImage ?? "";
-        data["photo-url"] = randomImage;
+        // App data contains one document, containing generic data
+        // which is not user specific. We have maps for genre and
+        // profile pictures for now. Here we need to access profile
+        // pictures to randomly assign a profile picture to a user.
+        Map<String, dynamic> profilePictures = document.data()['profile_pictures'];
+        int randomIndex = Random().nextInt(profilePictures.length);
+        imageUrl = profilePictures[randomIndex.toString()];
       }
+
+      // Add this image in data (Map) to store this in db with user
+      // details.
+      data['photo-url'] = imageUrl;
+
+      // Insert data in db.
+      await FirebaseFirestore.instance.collection('User-Data').add(data);
+
+      // Add user details in hive.
+      User userDetails = User(data['email'], data['name'], data['photo-url']);
+
+      // Add user details in hive box, to access it later when user opens
+      // app again.
+      await Globals.userLoginService!.addUserDetails(email, userDetails);
+
+      print('New user added successfully!');
+    } catch (error) {
+      print('Error adding new user: $error');
     }
-    await FirebaseFirestore.instance.collection('User-Data').add(data);
-    print('New user added successfully!');
-    return imageUrl;
-  } catch (error) {
-    print('Error adding new user: $error');
-    return "";
+  } else {
+    dynamic document = snapshot.docs.first;
+    Map<String, dynamic> data = document.data();
+
+    // Add user details in hive.
+    User userDetails = User(data['email'], data['name'], data['photo-url']);
+
+    // Add user details in hive box, to access it later when user opens
+    // app again.
+    await Globals.userLoginService!.addUserDetails(email, userDetails);
   }
 }
 

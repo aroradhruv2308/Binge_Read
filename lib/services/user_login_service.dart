@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_import
 
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/models/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';

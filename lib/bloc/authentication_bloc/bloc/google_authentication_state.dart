@@ -14,27 +14,26 @@ class DisplayNameChange extends GoogleAuthenticationState {
   List<Object?> get props => [];
 }
 
+class LoadingState extends GoogleAuthenticationState {
+  @override
+  List<Object?> get props => [];
+}
+
 class GoogleAuthenticationLoading extends GoogleAuthenticationState {
   @override
   List<Object?> get props => [];
 }
 
 class GoogleAuthenticationSuccess extends GoogleAuthenticationState {
-  late final GoogleSignInAccount? googleUser;
+  final GoogleSignInAccount? googleUser;
 
-  GoogleAuthenticationSuccess(this.googleUser);
+  const GoogleAuthenticationSuccess(this.googleUser);
 
   @override
   List<Object?> get props => [googleUser];
 }
 
 class GoogleAuthenticationFaliure extends GoogleAuthenticationState {
-  @override
-  // TODO: implement props
-  List<Object?> get props => [];
-}
-
-class TemporaryState extends GoogleAuthenticationState {
   @override
   List<Object?> get props => [];
 }

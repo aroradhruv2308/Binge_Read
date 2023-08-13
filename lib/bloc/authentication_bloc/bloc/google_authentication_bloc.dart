@@ -11,16 +11,20 @@ part 'google_authentication_state.dart';
 
 class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAuthenticationState> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   GoogleAuthenticationBloc() : super(GoogleAuthenticationInitial()) {
     on<GoogleAuthenticationEvent>((event, emit) {});
     on<SignInWithGoogleEvent>(_handleSignInWithGoogle);
     on<SignOutEvent>(_handleSignOut);
-    on<ChangeDisplayName>(_handleChangeDisplayName);
+    on<ChangeDisplayName>((event, emit) {
+      emit(DisplayNameChange());
+    });
+    on<LoadingEvent>((event, emit) {
+      emit(LoadingState());
+    });
   }
 
   Future<void> _handleChangeDisplayName(ChangeDisplayName event, Emitter<GoogleAuthenticationState> emit) async {
-    TemporaryState tempState = TemporaryState();
-    emit(tempState);
     DisplayNameChange state = DisplayNameChange();
     emit(state);
   }
@@ -30,26 +34,27 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
 
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      // If user unable to login, emit failure event.
       if (googleUser == null) {
         emit(GoogleAuthenticationFaliure());
         return;
       }
+
       Map<String, dynamic> userData = {
         'name': googleUser.displayName,
         'email': googleUser.email,
-        // Add more fields as needed
       };
 
-      String? name = userData['name'];
-      String? email = userData['email'];
-      Globals.userEmail = userData['email'];
-      Globals.userName = userData['name'];
-      String imageUrl = await addUser(userData);
-      Globals.profilePictureUrl = imageUrl;
-      User userDetails = User(email!, name!, imageUrl);
+      // This will check if user is new i.e. no email have registered before
+      // then store user data in db.
+      await addUserInDBAndStoreInHive(userData);
 
-      await Globals.userLoginService!.addUserDetails(email, userDetails);
+      // Set email in global variable to user email. This will be used
+      // for getting complete user data from db.
+      Globals.userEmail = userData["email"];
       Globals.isLogin = true;
+
       emit(GoogleAuthenticationSuccess(googleUser));
     } catch (e) {
       emit(GoogleAuthenticationFaliure());
