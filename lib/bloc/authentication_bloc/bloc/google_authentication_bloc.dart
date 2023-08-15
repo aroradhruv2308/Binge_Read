@@ -24,11 +24,6 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
     });
   }
 
-  Future<void> _handleChangeDisplayName(ChangeDisplayName event, Emitter<GoogleAuthenticationState> emit) async {
-    DisplayNameChange state = DisplayNameChange();
-    emit(state);
-  }
-
   Future<void> _handleSignInWithGoogle(SignInWithGoogleEvent event, Emitter<GoogleAuthenticationState> emit) async {
     emit(GoogleAuthenticationLoading());
 
@@ -42,7 +37,7 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
       }
 
       Map<String, dynamic> userData = {
-        'name': googleUser.displayName,
+        'name': googleUser.displayName?.substring(0, 15),
         'email': googleUser.email,
       };
 
@@ -55,6 +50,11 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
       Globals.userEmail = userData["email"];
       Globals.isLogin = true;
 
+      // Fetch userMetaData for loggedin user.
+      // Get user episodes data from DB.
+      var userMetaData = await getUserData(Globals.userEmail);
+      Globals.userMetaData = userMetaData;
+
       emit(GoogleAuthenticationSuccess(googleUser));
     } catch (e) {
       emit(GoogleAuthenticationFaliure());
@@ -63,10 +63,16 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
 
   Future<void> _handleSignOut(SignOutEvent event, Emitter<GoogleAuthenticationState> emit) async {
     await _googleSignIn.signOut();
+
+    // Delete user from hive local storage.
     await Globals.userLoginService?.deleteUserDetails(Globals.userEmail);
+
+    // Reset username, email and isLogin status.
     Globals.userEmail = "";
     Globals.userName = "Reader";
     Globals.isLogin = false;
+    Globals.userMetaData = {};
+
     emit(GoogleAuthenticationInitial());
   }
 }

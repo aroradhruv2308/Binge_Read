@@ -102,7 +102,10 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
       // by triggering updatePercentRead event. Also update pctRead in
       // Globals userMetaData as we only fetch userMeta data once, so we
       // have to be consistent.
-      Globals.userMetaData?["episodes"]?[episodeId]["pct_read"] = pctRead;
+      Globals.userMetaData?["episodes"] ??= {};
+      Globals.userMetaData?["episodes"][episodeId] ??= {};
+      Globals.userMetaData?["episodes"][episodeId]["pct_read"] = pctRead;
+
       widget.detailScreenBloc.add(
         UpdatePercentReadEvent(
           seasonNumber: widget.seasonNumber,

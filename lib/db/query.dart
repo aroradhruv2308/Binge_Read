@@ -88,7 +88,9 @@ Future<void> addUserInDBAndStoreInHive(Map<String, dynamic> data) async {
 
   // If user not present insert user details in db.
   if (snapshot.docs.isEmpty) {
-    // This will get executed user object was not present in firestore
+    // This will get executed user object was not present in firestore. Here we
+    // will add profile picture, username and email in user-data in db. Also
+    // we will create a subcollection app_data to store user-app related data.
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('App-Data').get();
       String imageUrl = avatarDefaultURL;
@@ -110,7 +112,18 @@ Future<void> addUserInDBAndStoreInHive(Map<String, dynamic> data) async {
       data['photo-url'] = imageUrl;
 
       // Insert data in db.
-      await FirebaseFirestore.instance.collection('User-Data').add(data);
+      final DocumentReference docRef = await FirebaseFirestore.instance.collection('User-Data').add(data);
+
+      // Insert subcollection name "app_data" to store user app related data. For e.g.
+      // percentage read of episodes, book marks etc.
+      final CollectionReference subcollectionRef = docRef.collection('app_data');
+
+      // Add one document in subcollection and add empty `episodes` map in it.
+      Map<String, dynamic> emptyEpisodesMap = {};
+      final DocumentReference episodesDocRef = subcollectionRef.doc();
+      await episodesDocRef.set({
+        'episodes': emptyEpisodesMap,
+      });
 
       // Add user details in hive.
       User userDetails = User(data['email'], data['name'], data['photo-url']);
