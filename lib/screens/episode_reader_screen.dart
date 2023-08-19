@@ -4,6 +4,7 @@ import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
@@ -13,6 +14,7 @@ import 'dart:math';
 
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 
+import '../components/custom_reader_screen_bottom_navbar.dart';
 import '../db/query.dart';
 
 // ignore: must_be_immutable
@@ -47,6 +49,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
 
   Future<String>? _htmlContent;
   late int pctRead;
+  late int totalEpisodes;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -54,6 +57,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
     super.initState();
     _htmlContent = getHtmlStringFromFirebaseStorage(widget.url);
     pctRead = widget.episodes[widget.episodeNumber - 1].pctRead;
+    totalEpisodes = widget.episodes.length;
 
     // Adding listener to scroll event i.e. whenever user will
     // scroll on the reader screen we will update percent read.
@@ -126,6 +130,14 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
     }
   }
 
+  void _updateSystemNavigationBarColor(bool isLightMode) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor: Globals.isLightMode ? AppColors.whiteColor : AppColors.backgroundColor,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,6 +147,11 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
           onTap: () {
             setState(() {
               Globals.isLightMode = !(Globals.isLightMode);
+              // Delay the update of system navigation bar color slightly
+              // This can help in making the update appear more synchronized
+              Future.delayed(const Duration(milliseconds: 120), () {
+                _updateSystemNavigationBarColor(Globals.isLightMode);
+              });
             });
           },
           child: Container(
@@ -157,65 +174,25 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
         actions: [
           Row(
             children: [
-              TextButton(
-                onPressed: (widget.episodeNumber != 1)
-                    ? () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReaderScreen(
-                                url: widget.episodes[widget.episodeNumber - 2].htmlUrl,
-                                episodeNumber: widget.episodeNumber - 1,
-                                seasonNumber: widget.seasonNumber,
-                                detailScreenBloc: widget.detailScreenBloc,
-                                episodes: widget.episodes),
-                          ),
-                        );
-                      }
-                    : null,
-                child: Text(
-                  " Prev ",
-                  style: TextStyle(
-                      color: (widget.episodeNumber == 1)
-                          ? AppColors.greyColor
-                          : ((Globals.isLightMode == false) ? AppColors.whiteColor : Colors.black),
-                      fontFamily: 'Lexend',
-                      fontSize: 16),
+              IconButton(
+                icon: const Icon(
+                  Icons.bookmark,
+                  color: AppColors.whiteColor,
                 ),
+                onPressed: () {},
               ),
               const SizedBox(
-                width: 15,
+                width: 5,
               ),
-              TextButton(
-                onPressed: (widget.episodeNumber != widget.episodes.length)
-                    ? () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReaderScreen(
-                                url: widget.episodes[widget.episodeNumber].htmlUrl,
-                                episodeNumber: widget.episodeNumber + 1,
-                                seasonNumber: widget.seasonNumber,
-                                detailScreenBloc: widget.detailScreenBloc,
-                                episodes: widget.episodes),
-                          ),
-                        );
-                      }
-                    : null,
-                child: Text(
-                  " Next ",
-                  style: TextStyle(
-                      color: (widget.episodeNumber == widget.episodes.length)
-                          ? AppColors.greyColor
-                          : ((Globals.isLightMode == false) ? AppColors.whiteColor : Colors.black),
-                      fontFamily: 'Lexend',
-                      fontSize: 16),
+              IconButton(
+                icon: const Icon(
+                  Icons.more_vert,
+                  color: AppColors.whiteColor,
                 ),
+                onPressed: () {},
               ),
               const SizedBox(
-                width: 20,
+                width: 5,
               )
             ],
           )
@@ -232,6 +209,13 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
         ),
         backgroundColor: Globals.isLightMode == false ? AppColors.backgroundColor : AppColors.whiteColor,
         elevation: 0,
+      ),
+      bottomNavigationBar: CustomReaderScreenBottomNavBar(
+        currentEpisode: widget.episodeNumber,
+        totalEpisodes: totalEpisodes,
+        episodes: widget.episodes,
+        seasonNumber: widget.seasonNumber,
+        detailScreenBloc: widget.detailScreenBloc,
       ),
       body: FutureBuilder<String>(
         future: _htmlContent,

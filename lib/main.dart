@@ -1,9 +1,11 @@
+import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/general_bloc/bloc/user_data_bloc.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:binge_read/firebase_options.dart';
 import 'package:binge_read/models/user.dart';
 import 'package:binge_read/services/user_app_data_service.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:binge_read/services/user_login_service.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +80,13 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
+    // Set the system navigation bar color
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: AppColors.backgroundColor, // Change this color
+      ),
+    );
+
     // Once the future has completed successfully
     return MultiBlocProvider(
       providers: [BlocProvider<UserDataBloc>(create: (context) => UserDataBloc())],

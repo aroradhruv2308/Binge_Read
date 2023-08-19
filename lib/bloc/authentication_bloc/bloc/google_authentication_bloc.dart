@@ -37,7 +37,7 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
       }
 
       Map<String, dynamic> userData = {
-        'name': googleUser.displayName?.substring(0, 15),
+        'name': googleUser.displayName,
         'email': googleUser.email,
       };
 
