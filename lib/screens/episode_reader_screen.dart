@@ -14,6 +14,7 @@ import 'dart:math';
 
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 
+import '../components/bottom_sheet_switch.dart';
 import '../components/custom_reader_screen_bottom_navbar.dart';
 import '../db/query.dart';
 
@@ -130,54 +131,17 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
     }
   }
 
-  void _updateSystemNavigationBarColor(bool isLightMode) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        systemNavigationBarColor: Globals.isLightMode ? AppColors.whiteColor : AppColors.backgroundColor,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 4.0),
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              Globals.isLightMode = !(Globals.isLightMode);
-              // Delay the update of system navigation bar color slightly
-              // This can help in making the update appear more synchronized
-              Future.delayed(const Duration(milliseconds: 120), () {
-                _updateSystemNavigationBarColor(Globals.isLightMode);
-              });
-            });
-          },
-          child: Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: Globals.isLightMode == true
-                    ? const AssetImage('images/light-dark-mode.png')
-                    : const AssetImage('images/dark-light-mode.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-      ),
       appBar: AppBar(
         actions: [
           Row(
             children: [
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.bookmark,
-                  color: AppColors.whiteColor,
+                  color: Globals.isLightMode ? AppColors.backgroundColor : AppColors.whiteColor,
                 ),
                 onPressed: () {},
               ),
@@ -185,11 +149,25 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
                 width: 5,
               ),
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.more_vert,
-                  color: AppColors.whiteColor,
+                  color: Globals.isLightMode ? AppColors.backgroundColor : AppColors.whiteColor,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return BottomSheetSwitch(
+                        switchValue: Globals.isLightMode,
+                        valueChanged: (value) {
+                          setState(() {
+                            Globals.isLightMode = value;
+                          });
+                        },
+                      );
+                    },
+                  );
+                },
               ),
               const SizedBox(
                 width: 5,

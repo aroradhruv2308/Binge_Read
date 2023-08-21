@@ -26,7 +26,7 @@ class CustomReaderScreenBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 56,
-      color: AppColors.backgroundColor,
+      color: Globals.isLightMode ? AppColors.whiteColor : AppColors.backgroundColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -72,9 +72,9 @@ class CustomReaderScreenBottomNavBar extends StatelessWidget {
                 ),
                 TextSpan(
                   text: currentEpisode.toString().padLeft(2, '0'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Lexend',
-                    color: AppColors.whiteColor,
+                    color: Globals.isLightMode ? AppColors.backgroundColor : AppColors.whiteColor,
                     fontSize: 18,
                   ),
                 ),
@@ -94,9 +94,9 @@ class CustomReaderScreenBottomNavBar extends StatelessWidget {
                 ),
                 TextSpan(
                   text: totalEpisodes.toString().padLeft(2, '0'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Lexend',
-                    color: AppColors.whiteColor,
+                    color: Globals.isLightMode ? AppColors.backgroundColor : AppColors.whiteColor,
                     fontSize: 18,
                   ),
                 ),
