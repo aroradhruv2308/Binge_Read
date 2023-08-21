@@ -51,6 +51,10 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
   Future<String>? _htmlContent;
   late int pctRead;
   late int totalEpisodes;
+
+  double fontSize = SizeConstants.twelvePixel;
+  int currentMultiplierIndex = 1;
+
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -158,13 +162,19 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
                     context: context,
                     builder: (BuildContext context) {
                       return BottomSheetSwitch(
-                        switchValue: Globals.isLightMode,
-                        valueChanged: (value) {
-                          setState(() {
-                            Globals.isLightMode = value;
+                          switchValue: Globals.isLightMode,
+                          valueChanged: (value) {
+                            setState(() {
+                              Globals.isLightMode = value;
+                            });
+                          },
+                          currentMultiplierIndex: currentMultiplierIndex,
+                          fontSizeMultiplierChange: (index, value) {
+                            setState(() {
+                              fontSize = 14.0 * value;
+                              currentMultiplierIndex = index;
+                            });
                           });
-                        },
-                      );
                     },
                   );
                 },
@@ -218,7 +228,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
                         "Episode ${widget.episodeNumber}",
                         style: TextStyle(
                           color: Globals.isLightMode == true ? AppColors.darkGreyColor : AppColors.greyColor,
-                          fontSize: 16,
+                          fontSize: fontSize + 2,
                           fontFamily: 'Lexend',
                         ),
                       ),
@@ -232,6 +242,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
                           textStyle: TextStyle(
                             color:
                                 Globals.isLightMode == false ? const Color.fromARGB(255, 202, 205, 214) : Colors.black,
+                            fontSize: fontSize,
                           ),
                         ),
                       ),
