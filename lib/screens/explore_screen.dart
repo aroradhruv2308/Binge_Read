@@ -1,6 +1,8 @@
+import 'package:binge_read/Utils/animations.dart';
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
 import 'package:binge_read/components/home_page_books_data.dart';
+import 'package:binge_read/screens/view_all_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -26,7 +28,7 @@ class _ExplorePageState extends State<ExplorePage> {
             height: 80,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.all(12.0),
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.greyColor),
@@ -41,8 +43,10 @@ class _ExplorePageState extends State<ExplorePage> {
                   ),
                   Expanded(
                     child: TextField(
+                      style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w300),
                       decoration: InputDecoration(
-                        hintText: 'Search Your Series..',
+                        hintText: 'Search Your Series',
+                        hintStyle: TextStyle(fontFamily: 'Lexend'),
                         border: InputBorder.none,
                       ),
                     ),
@@ -56,7 +60,7 @@ class _ExplorePageState extends State<ExplorePage> {
               future: getAllGenere(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(child: lottieLoader()); // we be adding default loader
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
@@ -88,21 +92,32 @@ class _ExplorePageState extends State<ExplorePage> {
                                           color: AppColors.whiteColor,
                                         ),
                                       ),
-                                      const Text(
-                                        'view-all',
-                                        style: TextStyle(
-                                            fontFamily: 'Lexend',
-                                            fontSize: SizeConstants.twelvePixel,
-                                            color: AppColors.greyColor),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => ViewAllPage(
+                                                      genre: genre,
+                                                    )),
+                                          ).then((value) => setState(() => {}));
+                                        },
+                                        child: const Text(
+                                          'view-all',
+                                          style: TextStyle(
+                                              fontFamily: 'Lexend',
+                                              fontSize: SizeConstants.twelvePixel,
+                                              color: AppColors.greyColor),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 40),
+                                  const SizedBox(height: 30),
                                   FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
-                                    future: getBooksForAGenre(),
+                                    future: getBooksForAGenre(genre),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return const Center(child: CircularProgressIndicator());
+                                        return shimmerCarousel(context);
                                       } else if (snapshot.hasError) {
                                         return Center(child: Text('Error: ${snapshot.error}'));
                                       } else {

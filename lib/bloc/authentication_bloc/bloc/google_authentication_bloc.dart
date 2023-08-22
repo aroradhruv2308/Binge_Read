@@ -39,10 +39,12 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
       Map<String, dynamic> userData = {
         'name': googleUser.displayName,
         'email': googleUser.email,
+        'bookmark_series': []
       };
 
       // This will check if user is new i.e. no email have registered before
       // then store user data in db.
+      Globals.bookMarkList = [];
       await addUserInDBAndStoreInHive(userData);
 
       // Set email in global variable to user email. This will be used

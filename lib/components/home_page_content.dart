@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:binge_read/Utils/animations.dart';
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/util_functions.dart';
 import 'package:binge_read/bloc/home_screen_bloc/home_screen_bloc.dart';
@@ -34,8 +35,8 @@ class _HomePageContentState extends State<HomePageContent> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Display a loading indicator or placeholder while waiting for data
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: lottieLoader(),
             );
           } else if (snapshot.hasError) {
             // Handle any errors that occurred during the async operation

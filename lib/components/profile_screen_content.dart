@@ -1,3 +1,4 @@
+import 'package:binge_read/Utils/animations.dart';
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/Utils/util_functions.dart';
@@ -7,6 +8,7 @@ import 'package:binge_read/db/query.dart';
 import 'package:binge_read/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class LoginUserProfileScreen extends StatefulWidget {
   final GoogleAuthenticationBloc googleAuthBloc;
@@ -31,7 +33,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
         future: getUserData(Globals.userEmail),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return Center(child: lottieLoader());
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -78,7 +80,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                       color: AppColors.greyColor,
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: NetworkImage(Globals.profilePictureUrl),
+                        image: CachedNetworkImageProvider(Globals.profilePictureUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -97,7 +99,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
                             builder: (context, state) {
                               if (state is LoadingState) {
                                 widget.localGoogleAuthBloc.add(const ChangeDisplayName());
-                                return const CircularProgressIndicator();
+                                return Center(child: lottieLoader()); // default loader
                               }
                               // if (state is DisplayNameChange) {
                               //   return Text(
@@ -255,7 +257,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
         Globals.userName = value;
 
         // Update local data in hive with updated username.
-        User userDetails = User(Globals.userEmail, value, Globals.profilePictureUrl);
+        User userDetails = User(Globals.userEmail, value, Globals.profilePictureUrl, Globals.bookMarkList);
         await Globals.userLoginService!.updateUserDetails(Globals.userEmail, userDetails);
 
         updateUserNameByEmail(Globals.userEmail, value);

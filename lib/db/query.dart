@@ -73,10 +73,14 @@ Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAllGenere() async {
   return documents;
 }
 
-Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getBooksForAGenre() async {
+Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getBooksForAGenre(String genre) async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Series').get();
 
-  dynamic documents = querySnapshot.docs;
+  dynamic documents = querySnapshot.docs.where((doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    List<String>? docGenres = List<String>.from(data['genre']);
+    return docGenres != null && docGenres.contains(genre);
+  }).toList();
   return documents;
 }
 
@@ -126,7 +130,7 @@ Future<void> addUserInDBAndStoreInHive(Map<String, dynamic> data) async {
       });
 
       // Add user details in hive.
-      User userDetails = User(data['email'], data['name'], data['photo-url']);
+      User userDetails = User(data['email'], data['name'], data['photo-url'], data['bookmark_series']);
 
       // Add user details in hive box, to access it later when user opens
       // app again.
@@ -141,7 +145,7 @@ Future<void> addUserInDBAndStoreInHive(Map<String, dynamic> data) async {
     Map<String, dynamic> data = document.data();
 
     // Add user details in hive.
-    User userDetails = User(data['email'], data['name'], data['photo-url']);
+    User userDetails = User(data['email'], data['name'], data['photo-url'], data['bookmark_series']);
 
     // Add user details in hive box, to access it later when user opens
     // app again.

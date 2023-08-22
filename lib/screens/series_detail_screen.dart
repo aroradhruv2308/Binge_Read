@@ -1,3 +1,4 @@
+import 'package:binge_read/Utils/animations.dart';
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/db/query.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'episode_reader_screen.dart';
 
@@ -170,9 +172,13 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                               height: MediaQuery.of(context).size.height * 0.2 - 15,
                               child: AspectRatio(
                                 aspectRatio: 4 / 3,
-                                child: Image.network(
-                                  widget.url,
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.url,
+                                  width: double.infinity,
                                   fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) => const Icon(
+                                    Icons.error,
+                                  ),
                                 ),
                               ),
                             ),
@@ -386,7 +392,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                       ),
                     );
                   } else {
-                    return const CircularProgressIndicator();
+                    return shimmerListPattern(context);
                   }
                 },
               ),

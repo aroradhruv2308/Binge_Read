@@ -14,6 +14,7 @@ class Globals {
   static String profilePictureUrl = "";
   static String defaultProfilePicAssetPath = "images/default-profile-pic.jpg";
   static bool isLightMode = false;
+  static List<int> bookMarkList = [];
 }
 
 final Logger logger = Logger();

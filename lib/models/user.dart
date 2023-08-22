@@ -5,12 +5,17 @@ part 'user.g.dart';
 class User {
   @HiveField(0)
   final String userEmail;
+
   @HiveField(1)
   final String userId;
+
   @HiveField(2)
   final String imageUrl;
 
-  User(this.userEmail, this.userId, this.imageUrl);
+  @HiveField(3)
+  final List<int> numbers; // Adding the list of integers
+
+  User(this.userEmail, this.userId, this.imageUrl, this.numbers);
 }
 
 @HiveType(typeId: 2)

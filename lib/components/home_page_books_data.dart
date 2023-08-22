@@ -14,7 +14,6 @@ Widget seriesCarousel({
   return SizedBox(
     height: MediaQuery.of(context).size.height * 0.2,
     child: ListView.builder(
-      shrinkWrap: true,
       scrollDirection: Axis.horizontal,
       itemCount: seriesDataList.length,
       itemBuilder: (context, index) {

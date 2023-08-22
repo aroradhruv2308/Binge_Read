@@ -20,19 +20,22 @@ class UserAdapter extends TypeAdapter<User> {
       fields[0] as String,
       fields[1] as String,
       fields[2] as String,
+      (fields[3] as List).cast<int>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.userEmail)
       ..writeByte(1)
       ..write(obj.userId)
       ..writeByte(2)
-      ..write(obj.imageUrl);
+      ..write(obj.imageUrl)
+      ..writeByte(3)
+      ..write(obj.numbers);
   }
 
   @override
