@@ -35,11 +35,11 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
         emit(GoogleAuthenticationFaliure());
         return;
       }
-
+      List<Map<String, dynamic>> bookmarkItemId = [];
       Map<String, dynamic> userData = {
         'name': googleUser.displayName,
         'email': googleUser.email,
-        'bookmark_series': []
+        'bookmarked_item_ids': bookmarkItemId
       };
 
       // This will check if user is new i.e. no email have registered before
@@ -75,6 +75,10 @@ class GoogleAuthenticationBloc extends Bloc<GoogleAuthenticationEvent, GoogleAut
     Globals.isLogin = false;
     Globals.userMetaData = {};
 
+    //  Adding the hive data to to the firestore and clear the hive too
+    await _addHiveDataToFirestore();
     emit(GoogleAuthenticationInitial());
   }
+
+  Future<void> _addHiveDataToFirestore() async {}
 }

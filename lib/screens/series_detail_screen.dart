@@ -1,6 +1,7 @@
 import 'package:binge_read/Utils/animations.dart';
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
+import 'package:binge_read/Utils/util_functions.dart';
 import 'package:binge_read/bloc/book_detail_screen_bloc/bloc/book_detail_screen_bloc.dart';
 import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/db/appDto.dart';
@@ -64,7 +65,8 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
     super.dispose();
   }
 
-  void _toggleBookmark() {
+  void handleBookmark() async {
+    toggleBookmark(isBookmarked, widget.seriesId, false);
     setState(() {
       isBookmarked = !isBookmarked;
       if (isBookmarked) {
@@ -85,7 +87,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: GestureDetector(
-              onTap: _toggleBookmark,
+              onTap: handleBookmark,
               child: AnimatedBuilder(
                 animation: _animationController,
                 builder: (context, child) {
@@ -363,12 +365,12 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ReaderScreen(
-                                          url: episodes[index].htmlUrl,
-                                          episodeNumber: index + 1,
-                                          seasonNumber: currentSeason,
-                                          detailScreenBloc: detailScreenBloc,
-                                          episodes: episodes,
-                                        ),
+                                            url: episodes[index].htmlUrl,
+                                            episodeNumber: index + 1,
+                                            seasonNumber: currentSeason,
+                                            detailScreenBloc: detailScreenBloc,
+                                            episodes: episodes,
+                                            seriesId: widget.seriesId),
                                       ),
                                     ).then((value) => setState(() => {}));
                                   },

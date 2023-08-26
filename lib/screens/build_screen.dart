@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/components/custom_navbar.dart';
+import 'package:binge_read/screens/bookmark_screen.dart';
 import 'package:binge_read/screens/explore_screen.dart';
 import 'package:binge_read/screens/home_page.dart';
 import 'package:binge_read/screens/profile_screen.dart';
@@ -26,7 +28,9 @@ class _MainScreenState extends State<MainScreen> {
         screen = const ExplorePage();
         break;
       case 2:
-        screen = Container();
+        screen = BookmarkPage(
+          bookmarkItems: [],
+        );
         break;
       default:
         screen = const ProfileScreen();

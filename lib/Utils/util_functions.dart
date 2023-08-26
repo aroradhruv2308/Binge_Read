@@ -1,3 +1,8 @@
+import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/global_variables.dart';
+import 'package:binge_read/db/query.dart';
+import 'package:binge_read/models/models.dart';
+
 String capitalizeWords(String input) {
   if (input.isEmpty) {
     return input;
@@ -32,4 +37,30 @@ List<dynamic> getCategoryList(String category, List<dynamic> series) {
     processedList.sort((a, b) => a['last_updated_time'].compareTo(b['last_updated_time']));
   }
   return processedList;
+}
+
+Future<List<Map<String, dynamic>>> getBookmarkData() async {
+  List<Map<String, dynamic>> bookmarkData = [];
+
+  // If user is logged in, Get Bookmark data from DB.
+  if (Globals.isLogin) {
+    bookmarkData = await getBookmarkDataFromDb(Globals.userEmail);
+    return bookmarkData;
+  }
+
+  // If user is not logged in, Get Data from Hive.
+  // bookmarkData = await Globals.userAppDataService.getBookmarkDataFromHive();
+  return bookmarkData;
+}
+
+void toggleBookmark(bool isBookmarked, dynamic id, bool isEpisode) async {
+  dynamic code = isEpisode ? EPISODE_CODE : SERIES_CODE;
+
+  if (Globals.isLogin) {
+    if (!isBookmarked) {
+      await addBookmarkItemToFirestore({code: id}, Globals.userEmail);
+    } else {
+      await deleteBookmarkItemFromFirestore({code: id}, Globals.userEmail);
+    }
+  }
 }

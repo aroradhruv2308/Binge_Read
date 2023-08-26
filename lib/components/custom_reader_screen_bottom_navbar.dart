@@ -12,15 +12,16 @@ class CustomReaderScreenBottomNavBar extends StatelessWidget {
   final List<Episode> episodes;
   final int seasonNumber;
   final BookDetailScreenBloc detailScreenBloc;
+  final int seriesId;
 
-  const CustomReaderScreenBottomNavBar({
-    super.key,
-    required this.currentEpisode,
-    required this.totalEpisodes,
-    required this.episodes,
-    required this.seasonNumber,
-    required this.detailScreenBloc,
-  });
+  const CustomReaderScreenBottomNavBar(
+      {super.key,
+      required this.currentEpisode,
+      required this.totalEpisodes,
+      required this.episodes,
+      required this.seasonNumber,
+      required this.detailScreenBloc,
+      required this.seriesId});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,7 @@ class CustomReaderScreenBottomNavBar extends StatelessWidget {
                           seasonNumber: seasonNumber,
                           detailScreenBloc: detailScreenBloc,
                           episodes: episodes,
+                          seriesId: seriesId,
                         ),
                       ),
                     );
@@ -118,11 +120,13 @@ class CustomReaderScreenBottomNavBar extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ReaderScreen(
-                            url: episodes[currentEpisode].htmlUrl,
-                            episodeNumber: currentEpisode + 1,
-                            seasonNumber: seasonNumber,
-                            detailScreenBloc: detailScreenBloc,
-                            episodes: episodes),
+                          url: episodes[currentEpisode].htmlUrl,
+                          episodeNumber: currentEpisode + 1,
+                          seasonNumber: seasonNumber,
+                          detailScreenBloc: detailScreenBloc,
+                          episodes: episodes,
+                          seriesId: seriesId,
+                        ),
                       ),
                     );
                   }

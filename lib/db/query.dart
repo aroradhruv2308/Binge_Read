@@ -4,12 +4,14 @@ import 'dart:math';
 
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/db/appDto.dart';
+import 'package:binge_read/models/models.dart';
 import 'package:binge_read/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/util_functions.dart';
 
 import '../Utils/global_variables.dart';
 
@@ -130,7 +132,7 @@ Future<void> addUserInDBAndStoreInHive(Map<String, dynamic> data) async {
       });
 
       // Add user details in hive.
-      User userDetails = User(data['email'], data['name'], data['photo-url'], data['bookmark_series']);
+      User userDetails = User(data['email'], data['name'], data['photo-url']);
 
       // Add user details in hive box, to access it later when user opens
       // app again.
@@ -145,7 +147,7 @@ Future<void> addUserInDBAndStoreInHive(Map<String, dynamic> data) async {
     Map<String, dynamic> data = document.data();
 
     // Add user details in hive.
-    User userDetails = User(data['email'], data['name'], data['photo-url'], data['bookmark_series']);
+    User userDetails = User(data['email'], data['name'], data['photo-url']);
 
     // Add user details in hive box, to access it later when user opens
     // app again.
@@ -314,5 +316,87 @@ Future<List<dynamic>> fetchIDsFromFirestore(String typeOfId) async {
   } catch (error) {
     print('Error fetching series data: $error');
     return [];
+  }
+}
+
+Future<void> addBookmarkItemToFirestore(Map<String, dynamic> bookmarkItem, String email) async {
+  try {
+    final QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final DocumentSnapshot userDocument = snapshot.docs.first;
+
+      // List<Map<String, dynamic>> currentBookmarkedItemIds = [];
+      Map<String, dynamic>? documentData = userDocument.data() as Map<String, dynamic>?;
+
+      if (documentData != null && documentData.containsKey('bookmarked_item_ids')) {
+        List<dynamic> bookmarkedItemIdsData = documentData['bookmarked_item_ids'];
+
+        // Add the new bookmark item to the list.
+        bookmarkedItemIdsData.add(bookmarkItem);
+
+        // Update firestore with updated list of bookmark items.
+        await userDocument.reference.update({'bookmarked_item_ids': bookmarkedItemIdsData});
+        print("Bookmark item updated successfully.");
+
+        // TODO: Update Global series and episodes list. This will help us know
+        // what all series or episodes are already bookmarked by user.
+      }
+    }
+  } catch (e) {
+    print('Error adding bookmark item: $e');
+  }
+}
+
+Future<List<Map<String, dynamic>>> getBookmarkDataFromDb(String email) async {
+  try {
+    final QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final DocumentSnapshot userDocument = snapshot.docs.first;
+      Map<String, dynamic>? documentData = userDocument.data() as Map<String, dynamic>?;
+
+      if (documentData != null && documentData.containsKey('bookmarked_item_ids')) {
+        List<Map<String, dynamic>> bookmarkedItemIds = documentData['bookmarked_item_ids'];
+        return bookmarkedItemIds;
+      }
+    }
+  } catch (e) {
+    print('Error getting bookmark items: $e');
+  }
+
+  return [];
+}
+
+Future<void> deleteBookmarkItemFromFirestore(dynamic bookmarkItem, String email) async {
+  try {
+    final QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final DocumentSnapshot userDocument = snapshot.docs.first;
+
+      // List<Map<String, dynamic>> currentBookmarkedItemIds = [];
+      Map<String, dynamic>? documentData = userDocument.data() as Map<String, dynamic>?;
+
+      if (documentData != null && documentData.containsKey('bookmarked_item_ids')) {
+        List<dynamic> bookmarkedItemIdsData = documentData['bookmarked_item_ids'];
+
+        // Remove bookmark item from list of bookmarks from DB.
+        bookmarkedItemIdsData.removeWhere((map) {
+          if (bookmarkItem["S"] != null) {
+            return map["S"] == bookmarkItem["S"];
+          }
+          return map["EP"] == bookmarkItem["EP"];
+        });
+
+        await userDocument.reference.update({'bookmarked_item_ids': bookmarkedItemIdsData});
+        print('Bookmark item deleted successfully.');
+      }
+    }
+  } catch (e) {
+    print('Error deleting bookmark item: $e');
   }
 }

@@ -257,7 +257,7 @@ class _LoginUserProfileScreenState extends State<LoginUserProfileScreen> {
         Globals.userName = value;
 
         // Update local data in hive with updated username.
-        User userDetails = User(Globals.userEmail, value, Globals.profilePictureUrl, Globals.bookMarkList);
+        User userDetails = User(Globals.userEmail, value, Globals.profilePictureUrl);
         await Globals.userLoginService!.updateUserDetails(Globals.userEmail, userDetails);
 
         updateUserNameByEmail(Globals.userEmail, value);

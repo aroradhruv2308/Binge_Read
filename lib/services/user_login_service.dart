@@ -25,6 +25,11 @@ class UserLoginService {
     return null;
   }
 
+  // TODO: Check later.
+  Future<List<dynamic>> getBookmarkItems() async {
+    return [];
+  }
+
   Future<void> addUserDetails(String key, User user) async {
     await _userDetails.put(key, user);
   }

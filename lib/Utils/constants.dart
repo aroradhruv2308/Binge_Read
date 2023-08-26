@@ -26,3 +26,6 @@ class SizeConstants {
 
 const avatarDefaultURL =
     "https://firebasestorage.googleapis.com/v0/b/binge-read-2326.appspot.com/o/AppData%2FProfilePictures%2FProfile-Pic-4.jpg?alt=media&token=9915ad79-f2a8-4e32-91dd-627a51bb15bf";
+
+const EPISODE_CODE = "EP";
+const SERIES_CODE = "S";

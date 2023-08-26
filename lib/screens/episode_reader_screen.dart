@@ -1,7 +1,6 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
+import 'package:binge_read/Utils/util_functions.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,9 +24,11 @@ class ReaderScreen extends StatefulWidget {
   final int seasonNumber;
   final BookDetailScreenBloc detailScreenBloc;
   final List<Episode> episodes;
+  final int seriesId;
 
   ReaderScreen({
     super.key,
+    required this.seriesId,
     required this.url,
     required this.episodeNumber,
     required this.seasonNumber,
@@ -40,7 +41,9 @@ class ReaderScreen extends StatefulWidget {
   State<ReaderScreen> createState() => ReaderScreenState();
 }
 
-class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver {
+class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<Color?> _colorAnimation;
   Future<String> getHtmlStringFromFirebaseStorage(String url) async {
     final response = await http.get(Uri.parse(url));
     final document = htmlparser.parse(response.bodyBytes, encoding: 'utf-8');
@@ -51,6 +54,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
   Future<String>? _htmlContent;
   late int pctRead;
   late int totalEpisodes;
+  bool isBookmarked = false;
 
   double fontSize = SizeConstants.twelvePixel;
   int currentMultiplierIndex = 1;
@@ -60,7 +64,15 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
     _htmlContent = getHtmlStringFromFirebaseStorage(widget.url);
+    _colorAnimation = ColorTween(
+      end: AppColors.primaryColor,
+      begin: AppColors.whiteColor,
+    ).animate(_animationController);
     pctRead = widget.episodes[widget.episodeNumber - 1].pctRead;
     totalEpisodes = widget.episodes.length;
 
@@ -89,7 +101,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
 
     // Update percent Read if user navigates to back to previous screen.
     _updatePctReadInDatabase();
-
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -135,6 +147,20 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
     }
   }
 
+  void handleBookmark() async {
+    // create the id for particular episode
+    String episodeId = 'S${widget.seriesId}SN${widget.seasonNumber}EP${widget.episodeNumber}';
+    toggleBookmark(isBookmarked, episodeId, true);
+    setState(() {
+      isBookmarked = !isBookmarked;
+      if (isBookmarked) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,12 +168,17 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
         actions: [
           Row(
             children: [
-              IconButton(
-                icon: Icon(
-                  Icons.bookmark,
-                  color: Globals.isLightMode ? AppColors.backgroundColor : AppColors.whiteColor,
+              GestureDetector(
+                onTap: handleBookmark,
+                child: AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) {
+                    return Icon(
+                      Icons.bookmark,
+                      color: _colorAnimation.value,
+                    );
+                  },
                 ),
-                onPressed: () {},
               ),
               const SizedBox(
                 width: 5,
@@ -199,12 +230,12 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver 
         elevation: 0,
       ),
       bottomNavigationBar: CustomReaderScreenBottomNavBar(
-        currentEpisode: widget.episodeNumber,
-        totalEpisodes: totalEpisodes,
-        episodes: widget.episodes,
-        seasonNumber: widget.seasonNumber,
-        detailScreenBloc: widget.detailScreenBloc,
-      ),
+          currentEpisode: widget.episodeNumber,
+          totalEpisodes: totalEpisodes,
+          episodes: widget.episodes,
+          seasonNumber: widget.seasonNumber,
+          detailScreenBloc: widget.detailScreenBloc,
+          seriesId: widget.seriesId),
       body: FutureBuilder<String>(
         future: _htmlContent,
         builder: (context, snapshot) {

@@ -1,3 +1,4 @@
+import 'package:binge_read/models/models.dart';
 import 'package:hive/hive.dart';
 part 'user.g.dart';
 
@@ -12,16 +13,15 @@ class User {
   @HiveField(2)
   final String imageUrl;
 
-  @HiveField(3)
-  final List<int> numbers; // Adding the list of integers
-
-  User(this.userEmail, this.userId, this.imageUrl, this.numbers);
+  User(this.userEmail, this.userId, this.imageUrl);
 }
 
 @HiveType(typeId: 2)
 class AppData {
   @HiveField(0)
   final Map<String, int> seriesReadCount;
+  @HiveField(1)
+  final List<Pair<String, dynamic>> bookmarkItems;
 
-  AppData(this.seriesReadCount);
+  AppData(this.seriesReadCount, this.bookmarkItems);
 }

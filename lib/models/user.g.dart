@@ -20,22 +20,19 @@ class UserAdapter extends TypeAdapter<User> {
       fields[0] as String,
       fields[1] as String,
       fields[2] as String,
-      (fields[3] as List).cast<int>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.userEmail)
       ..writeByte(1)
       ..write(obj.userId)
       ..writeByte(2)
-      ..write(obj.imageUrl)
-      ..writeByte(3)
-      ..write(obj.numbers);
+      ..write(obj.imageUrl);
   }
 
   @override
@@ -61,15 +58,18 @@ class AppDataAdapter extends TypeAdapter<AppData> {
     };
     return AppData(
       (fields[0] as Map).cast<String, int>(),
+      (fields[1] as List).cast<Pair<String, dynamic>>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, AppData obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.seriesReadCount);
+      ..write(obj.seriesReadCount)
+      ..writeByte(1)
+      ..write(obj.bookmarkItems);
   }
 
   @override

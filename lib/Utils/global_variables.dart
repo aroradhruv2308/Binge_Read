@@ -1,3 +1,5 @@
+import 'package:binge_read/db/appDto.dart';
+import 'package:binge_read/models/models.dart';
 import 'package:binge_read/services/user_app_data_service.dart';
 import 'package:binge_read/services/user_login_service.dart';
 import 'package:logger/logger.dart';
@@ -15,6 +17,7 @@ class Globals {
   static String defaultProfilePicAssetPath = "images/default-profile-pic.jpg";
   static bool isLightMode = false;
   static List<int> bookMarkList = [];
+  final List<Pair<String, dynamic>> bookmarkItems = [];
 }
 
 final Logger logger = Logger();
