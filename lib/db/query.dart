@@ -349,7 +349,7 @@ Future<void> addBookmarkItemToFirestore(Map<String, dynamic> bookmarkItem, Strin
   }
 }
 
-Future<List<Map<String, dynamic>>> getBookmarkDataFromDb(String email) async {
+Future<List<dynamic>> getBookmarkDataFromDb(String email) async {
   try {
     final QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
@@ -359,7 +359,7 @@ Future<List<Map<String, dynamic>>> getBookmarkDataFromDb(String email) async {
       Map<String, dynamic>? documentData = userDocument.data() as Map<String, dynamic>?;
 
       if (documentData != null && documentData.containsKey('bookmarked_item_ids')) {
-        List<Map<String, dynamic>> bookmarkedItemIds = documentData['bookmarked_item_ids'];
+        List<dynamic> bookmarkedItemIds = documentData['bookmarked_item_ids'];
         return bookmarkedItemIds;
       }
     }

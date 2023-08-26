@@ -1,4 +1,7 @@
+import 'package:binge_read/Utils/constants.dart';
+import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/Utils/util_functions.dart';
+import 'package:binge_read/components/custom_appbar.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/models/models.dart';
 import 'package:flutter/material.dart';
@@ -16,24 +19,58 @@ class _BookmarkPageState extends State<BookmarkPage> {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      return FutureBuilder<List<Map<String, dynamic>>>(
-        future: getBookmarkData(),
-        builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return Container(
-              padding: EdgeInsets.all(20),
-              color: Colors.blue,
-              child: Text(
-                "No data",
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }
-        },
+      return Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            "Detail",
+            style: TextStyle(
+              fontFamily: 'Lexend',
+              fontSize: SizeConstants.eighteenPixel,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          backgroundColor: AppColors.backgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new_outlined,
+              color: Colors.white,
+              size: SizeConstants.eighteenPixel,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        body: FutureBuilder<List<dynamic>>(
+          future: getBookmarkData(),
+          builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              logger.e(snapshot.data);
+              return Column(
+                children: List.generate(
+                  snapshot.data?.length ?? 0,
+                  (index) => Card(
+                    color: Colors.blue,
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "${index + 1}",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
       );
     });
   }

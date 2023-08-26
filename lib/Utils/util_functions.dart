@@ -39,8 +39,8 @@ List<dynamic> getCategoryList(String category, List<dynamic> series) {
   return processedList;
 }
 
-Future<List<Map<String, dynamic>>> getBookmarkData() async {
-  List<Map<String, dynamic>> bookmarkData = [];
+Future<List<dynamic>> getBookmarkData() async {
+  List<dynamic> bookmarkData = [];
 
   // If user is logged in, Get Bookmark data from DB.
   if (Globals.isLogin) {
