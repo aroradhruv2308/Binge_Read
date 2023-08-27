@@ -1,9 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/Utils/util_functions.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
@@ -42,8 +43,6 @@ class ReaderScreen extends StatefulWidget {
 }
 
 class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver, SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<Color?> _colorAnimation;
   Future<String> getHtmlStringFromFirebaseStorage(String url) async {
     final response = await http.get(Uri.parse(url));
     final document = htmlparser.parse(response.bodyBytes, encoding: 'utf-8');
@@ -53,6 +52,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
 
   Future<String>? _htmlContent;
   late int pctRead;
+  late String? episodeId;
   late int totalEpisodes;
   bool isBookmarked = false;
 
@@ -64,17 +64,12 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
     _htmlContent = getHtmlStringFromFirebaseStorage(widget.url);
-    _colorAnimation = ColorTween(
-      end: AppColors.primaryColor,
-      begin: AppColors.whiteColor,
-    ).animate(_animationController);
     pctRead = widget.episodes[widget.episodeNumber - 1].pctRead;
+    episodeId = widget.episodes[widget.episodeNumber - 1].episodeId;
     totalEpisodes = widget.episodes.length;
+
+    isBookmarked = Globals.userMetaData?['episodes_bookmark'].any((map) => map['id'] == episodeId);
 
     // Adding listener to scroll event i.e. whenever user will
     // scroll on the reader screen we will update percent read.
@@ -101,7 +96,6 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
 
     // Update percent Read if user navigates to back to previous screen.
     _updatePctReadInDatabase();
-    _animationController.dispose();
     super.dispose();
   }
 
@@ -153,11 +147,6 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
     toggleBookmark(isBookmarked, episodeId, true);
     setState(() {
       isBookmarked = !isBookmarked;
-      if (isBookmarked) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
-      }
     });
   }
 
@@ -170,14 +159,9 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
             children: [
               GestureDetector(
                 onTap: handleBookmark,
-                child: AnimatedBuilder(
-                  animation: _animationController,
-                  builder: (context, child) {
-                    return Icon(
-                      Icons.bookmark,
-                      color: _colorAnimation.value,
-                    );
-                  },
+                child: Icon(
+                  Icons.bookmark,
+                  color: isBookmarked ? AppColors.primaryColor : AppColors.whiteColor,
                 ),
               ),
               const SizedBox(

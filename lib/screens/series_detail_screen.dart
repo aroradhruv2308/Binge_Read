@@ -45,10 +45,6 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
     super.initState();
     detailScreenBloc = BookDetailScreenBloc(widget.seriesId, currentSeason);
     isBookmarked = Globals.userMetaData?['series_bookmark'].any((map) => map['id'] == widget.seriesId);
-
-    print(Globals.userMetaData);
-    print(isBookmarked);
-    print(Globals.userMetaData?['series_bookmark'].any((map) => map['id'] == widget.seriesId));
   }
 
   @override
