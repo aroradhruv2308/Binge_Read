@@ -343,8 +343,10 @@ Future<void> addBookmarkItemToFirestore(Map<String, dynamic> bookmarkItem, Strin
         await userDocument.reference.update({bookmarkListName: bookmarkedItemIdsData});
         print("Bookmark item updated successfully.");
 
-        // TODO: Update Global series and episodes list. This will help us know
+        // Update Global series and episodes list. This will help us know
         // what all series or episodes are already bookmarked by user.
+        Globals.userMetaData?[bookmarkListName].add(bookmarkItem);
+        print("Added data in local user meta data");
       }
     }
   } catch (e) {
@@ -395,6 +397,11 @@ Future<void> deleteBookmarkItemFromFirestore(dynamic bookmarkItem, String email,
 
         await userDocument.reference.update({bookmarkListName: bookmarkedItemIdsData});
         print('Bookmark item deleted successfully.');
+
+        // Update Global series and episodes list. This will help us know
+        // what all series or episodes are already bookmarked by user.
+        Globals.userMetaData?[bookmarkListName].removeWhere((map) => map["id"] == bookmarkItem["id"]);
+        print("Bookmark item deleted from local usermeta data.");
       }
     }
   } catch (e) {

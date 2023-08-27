@@ -35,8 +35,6 @@ class SeriesDetailScreen extends StatefulWidget {
 }
 
 class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<Color?> _colorAnimation;
   late BookDetailScreenBloc detailScreenBloc;
   int currentSeason = 1;
   late List<Episode> episodes;
@@ -46,21 +44,15 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
   void initState() {
     super.initState();
     detailScreenBloc = BookDetailScreenBloc(widget.seriesId, currentSeason);
+    isBookmarked = Globals.userMetaData?['series_bookmark'].any((map) => map['id'] == widget.seriesId);
 
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-
-    _colorAnimation = ColorTween(
-      end: AppColors.primaryColor,
-      begin: AppColors.whiteColor,
-    ).animate(_animationController);
+    print(Globals.userMetaData);
+    print(isBookmarked);
+    print(Globals.userMetaData?['series_bookmark'].any((map) => map['id'] == widget.seriesId));
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     detailScreenBloc.close();
     super.dispose();
   }
@@ -69,11 +61,6 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
     toggleBookmark(isBookmarked, widget.seriesId, false);
     setState(() {
       isBookmarked = !isBookmarked;
-      if (isBookmarked) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
-      }
     });
   }
 
@@ -88,15 +75,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
             padding: const EdgeInsets.only(right: 8.0),
             child: GestureDetector(
               onTap: handleBookmark,
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) {
-                  return Icon(
-                    Icons.bookmark,
-                    color: _colorAnimation.value,
-                  );
-                },
-              ),
+              child: Icon(Icons.bookmark, color: isBookmarked ? AppColors.primaryColor : AppColors.whiteColor),
             ),
           ),
         ],

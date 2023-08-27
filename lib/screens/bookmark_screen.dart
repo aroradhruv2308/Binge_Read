@@ -1,6 +1,7 @@
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/Utils/util_functions.dart';
+import 'package:binge_read/components/bookmark_card.dart';
 import 'package:binge_read/components/custom_appbar.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/models/models.dart';
@@ -24,7 +25,7 @@ class _BookmarkPageState extends State<BookmarkPage> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text(
-            "Detail",
+            "Bookmarked Elements",
             style: TextStyle(
               fontFamily: 'Lexend',
               fontSize: SizeConstants.eighteenPixel,
@@ -54,19 +55,16 @@ class _BookmarkPageState extends State<BookmarkPage> {
             } else {
               logger.e(snapshot.data);
               return Column(
-                children: List.generate(
-                  snapshot.data?.length ?? 0,
-                  (index) => Card(
-                    color: Colors.blue,
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text(
-                        "${index + 1}",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
+                children: List.generate(snapshot.data?.length ?? 0, (index) {
+                  dynamic bookmarkItem = snapshot.data?[index];
+                  bool isEpisode = false;
+                  if (bookmarkItem[EPISODE_CODE] != null) {
+                    isEpisode = true;
+                  }
+                  if (isEpisode) {
+                  } else {}
+                  return bookmarkCard();
+                }),
               );
             }
           },
