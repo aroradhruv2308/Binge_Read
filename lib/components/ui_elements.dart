@@ -9,7 +9,6 @@ import 'package:binge_read/screens/episode_reader_screen.dart';
 import 'package:blur/blur.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:readmore/readmore.dart';
 // ignore: depend_on_referenced_packages

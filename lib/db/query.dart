@@ -319,7 +319,7 @@ Future<List<dynamic>> fetchIDsFromFirestore(String typeOfId) async {
   }
 }
 
-Future<void> addBookmarkItemToFirestore(Map<String, dynamic> bookmarkItem, String email) async {
+Future<void> addBookmarkItemToFirestore(Map<String, dynamic> bookmarkItem, String email, bool isEpisode) async {
   try {
     final QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
@@ -327,17 +327,20 @@ Future<void> addBookmarkItemToFirestore(Map<String, dynamic> bookmarkItem, Strin
     if (snapshot.docs.isNotEmpty) {
       final DocumentSnapshot userDocument = snapshot.docs.first;
 
-      // List<Map<String, dynamic>> currentBookmarkedItemIds = [];
       Map<String, dynamic>? documentData = userDocument.data() as Map<String, dynamic>?;
 
-      if (documentData != null && documentData.containsKey('bookmarked_item_ids')) {
-        List<dynamic> bookmarkedItemIdsData = documentData['bookmarked_item_ids'];
+      // If bookmarking a series, update the series in series_bookmark and if
+      // bookmarking an episode update the episode_bookmark.
+      String bookmarkListName = isEpisode ? "episodes_bookmark" : "series_bookmark";
+
+      if (documentData != null && documentData.containsKey(bookmarkListName)) {
+        List<dynamic> bookmarkedItemIdsData = documentData[bookmarkListName];
 
         // Add the new bookmark item to the list.
         bookmarkedItemIdsData.add(bookmarkItem);
 
         // Update firestore with updated list of bookmark items.
-        await userDocument.reference.update({'bookmarked_item_ids': bookmarkedItemIdsData});
+        await userDocument.reference.update({bookmarkListName: bookmarkedItemIdsData});
         print("Bookmark item updated successfully.");
 
         // TODO: Update Global series and episodes list. This will help us know
@@ -370,7 +373,7 @@ Future<List<dynamic>> getBookmarkDataFromDb(String email) async {
   return [];
 }
 
-Future<void> deleteBookmarkItemFromFirestore(dynamic bookmarkItem, String email) async {
+Future<void> deleteBookmarkItemFromFirestore(dynamic bookmarkItem, String email, bool isEpisode) async {
   try {
     final QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
@@ -381,18 +384,16 @@ Future<void> deleteBookmarkItemFromFirestore(dynamic bookmarkItem, String email)
       // List<Map<String, dynamic>> currentBookmarkedItemIds = [];
       Map<String, dynamic>? documentData = userDocument.data() as Map<String, dynamic>?;
 
-      if (documentData != null && documentData.containsKey('bookmarked_item_ids')) {
-        List<dynamic> bookmarkedItemIdsData = documentData['bookmarked_item_ids'];
+      // If series unbookmarked, then remove it from series list else episodes list.
+      String bookmarkListName = isEpisode ? "episodes_bookmark" : "series_bookmark";
+
+      if (documentData != null && documentData.containsKey(bookmarkListName)) {
+        List<dynamic> bookmarkedItemIdsData = documentData[bookmarkListName];
 
         // Remove bookmark item from list of bookmarks from DB.
-        bookmarkedItemIdsData.removeWhere((map) {
-          if (bookmarkItem["S"] != null) {
-            return map["S"] == bookmarkItem["S"];
-          }
-          return map["EP"] == bookmarkItem["EP"];
-        });
+        bookmarkedItemIdsData.removeWhere((map) => map["id"] == bookmarkItem["id"]);
 
-        await userDocument.reference.update({'bookmarked_item_ids': bookmarkedItemIdsData});
+        await userDocument.reference.update({bookmarkListName: bookmarkedItemIdsData});
         print('Bookmark item deleted successfully.');
       }
     }

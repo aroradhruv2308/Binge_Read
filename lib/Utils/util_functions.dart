@@ -54,13 +54,19 @@ Future<List<dynamic>> getBookmarkData() async {
 }
 
 void toggleBookmark(bool isBookmarked, dynamic id, bool isEpisode) async {
-  dynamic code = isEpisode ? EPISODE_CODE : SERIES_CODE;
-
   if (Globals.isLogin) {
     if (!isBookmarked) {
-      await addBookmarkItemToFirestore({code: id}, Globals.userEmail);
+      await addBookmarkItemToFirestore(
+        {"id": id, "update_time": DateTime.now()},
+        Globals.userEmail,
+        isEpisode,
+      );
     } else {
-      await deleteBookmarkItemFromFirestore({code: id}, Globals.userEmail);
+      await deleteBookmarkItemFromFirestore(
+        {"id": id, "update_time": DateTime.now()},
+        Globals.userEmail,
+        isEpisode,
+      );
     }
   }
 }
