@@ -24,6 +24,7 @@ Widget seriesCard({
   return Container(
     padding: const EdgeInsets.only(right: 16),
     width: MediaQuery.of(context).size.width * 0.4,
+    constraints: const BoxConstraints(maxWidth: 140),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

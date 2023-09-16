@@ -11,8 +11,9 @@ Widget seriesCarousel({
   required HomeScreenBloc homeScreenBloc,
   required List<dynamic> seriesDataList,
 }) {
-  return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.2,
+  return Container(
+    constraints: const BoxConstraints(maxHeight: 150),
+    height: MediaQuery.of(context).size.height * 0.22,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: seriesDataList.length,
