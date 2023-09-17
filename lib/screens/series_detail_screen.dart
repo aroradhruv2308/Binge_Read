@@ -44,7 +44,8 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
   void initState() {
     super.initState();
     detailScreenBloc = BookDetailScreenBloc(widget.seriesId, currentSeason);
-    isBookmarked = Globals.userMetaData?['series_bookmark'].any((map) => map['id'] == widget.seriesId);
+    // isBookmarked = Globals.userMetaData?['series_bookmark'].any((map) => map['id'] == widget.seriesId);
+    isBookmarked = false;
   }
 
   @override
@@ -122,7 +123,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
                               child: Container(
-                                color: AppColors.glowGreen,
+                                color: AppColors.navBarColor,
                                 width: MediaQuery.of(context).size.width * 0.35 - 10,
                                 height: MediaQuery.of(context).size.height * 0.2 - 10,
                               ),
