@@ -16,8 +16,8 @@ class Globals {
   static String profilePictureUrl = "";
   static String defaultProfilePicAssetPath = "images/default-profile-pic.jpg";
   static bool isLightMode = false;
-  static List<int> bookMarkList = [];
-  final List<Pair<String, dynamic>> bookmarkItems = [];
+  static List<dynamic> bookmarkSeriesList = [];
+  static List<dynamic> bookmarkedEpisodesList = [];
 }
 
 final Logger logger = Logger();

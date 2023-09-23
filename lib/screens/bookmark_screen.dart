@@ -1,3 +1,4 @@
+import 'package:binge_read/Utils/animations.dart';
 import 'package:binge_read/Utils/constants.dart';
 import 'package:binge_read/Utils/global_variables.dart';
 import 'package:binge_read/Utils/util_functions.dart';
@@ -45,30 +46,56 @@ class _BookmarkPageState extends State<BookmarkPage> {
             },
           ),
         ),
-        body: FutureBuilder<List<dynamic>>(
-          future: getBookmarkData(),
-          builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              logger.e(snapshot.data);
-              return Column(
-                children: List.generate(snapshot.data?.length ?? 0, (index) {
-                  dynamic bookmarkItem = snapshot.data?[index];
-                  bool isEpisode = false;
-                  if (bookmarkItem[EPISODE_CODE] != null) {
-                    isEpisode = true;
+        body: Globals.isLogin == true
+            ? FutureBuilder<List<dynamic>>(
+                future: getBookmarkData(),
+                builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    logger.e(snapshot.data);
+                    return Column(
+                      children: List.generate(snapshot.data?.length ?? 0, (index) {
+                        dynamic bookmarkItem = snapshot.data?[index];
+                        bool isEpisode = false;
+                        if (bookmarkItem[EPISODE_CODE] != null) {
+                          isEpisode = true;
+                        }
+                        if (isEpisode) {
+                        } else {}
+                        return bookmarkCard();
+                      }),
+                    );
                   }
-                  if (isEpisode) {
-                  } else {}
-                  return bookmarkCard();
-                }),
-              );
-            }
-          },
-        ),
+                },
+              )
+            : Center(
+                child: Column(
+                children: [
+                  lottieBookmarkScreenAnimation(),
+                  const SizedBox(
+                    height: 40,
+                    width: 40,
+                  ),
+                  Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.60,
+                    child: const Text(
+                      "Please Login with google to access this Feature",
+                      style: TextStyle(
+                        letterSpacing: 1.5,
+                        wordSpacing: 2,
+                        color: AppColors.greyColor,
+                        fontSize: 20,
+                        fontFamily: 'Lexend',
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                  )
+                ],
+              )),
       );
     });
   }

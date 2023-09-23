@@ -94,3 +94,13 @@ Widget lottieLoader() {
     ),
   );
 }
+
+Widget lottieBookmarkScreenAnimation() {
+  return Center(
+    child: Lottie.asset(
+      'lottie_animations/animation_cat.json',
+      width: 150, // Adjust the width as needed
+      height: 150, // Adjust the height as needed
+    ),
+  );
+}

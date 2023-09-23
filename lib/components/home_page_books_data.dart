@@ -30,7 +30,7 @@ Widget seriesCarousel({
                   genre: List<String>.from(genre.map((item) => item.toString())),
                   url: imageUrl,
                   title: seriesDataList[index]['series_name'],
-                  rating: seriesDataList[index]['rating'],
+                  rating: seriesDataList[index]['rating'].toDouble(),
                   numberOfViews: seriesDataList[index]['total_views'],
                   synopsis: seriesDataList[index]['about'],
                 ),
@@ -42,7 +42,7 @@ Widget seriesCarousel({
             child: seriesCard(
               context: context,
               imageUrl: imageUrl,
-              rating: seriesDataList[index]['rating'],
+              rating: seriesDataList[index]['rating'].toDouble(),
               numberSeason: seriesDataList[index]['number_of_seasons'],
               seriesName: seriesDataList[index]['series_name'],
             ),

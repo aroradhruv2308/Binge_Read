@@ -141,13 +141,8 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
     }
   }
 
-  void handleBookmark() async {
-    // create the id for particular episode
-    String episodeId = 'S${widget.seriesId}SN${widget.seasonNumber}EP${widget.episodeNumber}';
-    toggleBookmark(isBookmarked, episodeId, true);
-    setState(() {
-      isBookmarked = !isBookmarked;
-    });
+  void handleLike() async {
+    //TODO: handle like button functionality here
   }
 
   @override
@@ -158,7 +153,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
           Row(
             children: [
               GestureDetector(
-                onTap: handleBookmark,
+                onTap: handleLike,
                 child: Icon(
                   Icons.bookmark,
                   color: isBookmarked ? AppColors.primaryColor : AppColors.whiteColor,

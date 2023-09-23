@@ -26,15 +26,80 @@ String capitalizeWords(String input) {
 List<dynamic> getCategoryList(String category, List<dynamic> series) {
   List<dynamic> processedList = List.from(series);
   if (category == "most_viewed") {
-    processedList.sort((b, a) => a['total_views'].compareTo(b['total_views']));
+    processedList.sort((a, b) {
+      final aTime = a['total_views'];
+      final bTime = b['total_views'];
+      if (aTime == null && bTime == null) {
+        return 0;
+      } else if (aTime == null) {
+        return 1;
+      } else if (bTime == null) {
+        return -1;
+      }
+
+      // Compare the non-null values.
+      return aTime.compareTo(bTime);
+    });
   } else if (category == "trending_count") {
-    processedList.sort((a, b) => a['trending_count'].compareTo(b['trending_count']));
+    processedList.sort((a, b) {
+      final aTime = a['trending_count'];
+      final bTime = b['trending_count'];
+      if (aTime == null && bTime == null) {
+        return 0;
+      } else if (aTime == null) {
+        return 1;
+      } else if (bTime == null) {
+        return -1;
+      }
+
+      // Compare the non-null values.
+      return aTime.compareTo(bTime);
+    });
   } else if (category == "top_searches") {
-    processedList.sort((a, b) => a['top_searches_count'].compareTo(b['top_searches_count']));
+    processedList.sort((a, b) {
+      final aTime = a['top_searches_count'];
+      final bTime = b['top_searches_count'];
+      if (aTime == null && bTime == null) {
+        return 0;
+      } else if (aTime == null) {
+        return 1;
+      } else if (bTime == null) {
+        return -1;
+      }
+
+      // Compare the non-null values.
+      return aTime.compareTo(bTime);
+    });
   } else if (category == "top_picks") {
-    processedList.sort((b, a) => a['rating'].compareTo(b['rating']));
+    processedList.sort((a, b) {
+      final aTime = a['rating'];
+      final bTime = b['rating'];
+      if (aTime == null && bTime == null) {
+        return 0;
+      } else if (aTime == null) {
+        return 1;
+      } else if (bTime == null) {
+        return -1;
+      }
+
+      // Compare the non-null values.
+      return aTime.compareTo(bTime);
+    });
   } else if (category == "new_releases") {
-    processedList.sort((a, b) => a['last_updated_time'].compareTo(b['last_updated_time']));
+    processedList.sort((a, b) {
+      final aTime = a['last_updated_time'];
+      final bTime = b['last_updated_time'];
+      if (aTime == null && bTime == null) {
+        return 0;
+      } else if (aTime == null) {
+        return 1;
+      } else if (bTime == null) {
+        return -1;
+      }
+
+      // Compare the non-null values.
+      return aTime.compareTo(bTime);
+    });
   }
   return processedList;
 }
@@ -53,20 +118,19 @@ Future<List<dynamic>> getBookmarkData() async {
   return bookmarkData;
 }
 
-void toggleBookmark(bool isBookmarked, dynamic id, bool isEpisode) async {
-  if (Globals.isLogin) {
-    if (!isBookmarked) {
-      await addBookmarkItemToFirestore(
-        {"id": id, "update_time": DateTime.now()},
-        Globals.userEmail,
-        isEpisode,
-      );
-    } else {
-      await deleteBookmarkItemFromFirestore(
-        {"id": id, "update_time": DateTime.now()},
-        Globals.userEmail,
-        isEpisode,
-      );
-    }
+void toggleBookmark(bool isBookmarked, dynamic id) async {
+  // user will be logged in state
+  if (!isBookmarked) {
+    //update database
+    addBookmarkItemToFirestore(id);
+
+    //add in local storage
+    Globals.bookmarkSeriesList.add(id);
+  } else {
+    //update database
+    deleteBookmarkItemFromFirestore(id);
+
+    //remove from local storage
+    Globals.bookmarkSeriesList.remove(id);
   }
 }

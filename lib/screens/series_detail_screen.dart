@@ -55,7 +55,7 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
   }
 
   void handleBookmark() async {
-    toggleBookmark(isBookmarked, widget.seriesId, false);
+    toggleBookmark(isBookmarked, widget.seriesId);
     setState(() {
       isBookmarked = !isBookmarked;
     });
@@ -68,13 +68,15 @@ class _SeriesDetailScreenState extends State<SeriesDetailScreen> with SingleTick
       appBar: AppBar(
         centerTitle: true,
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: GestureDetector(
-              onTap: handleBookmark,
-              child: Icon(Icons.bookmark, color: isBookmarked ? AppColors.primaryColor : AppColors.whiteColor),
-            ),
-          ),
+          Globals.isLogin == true
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: GestureDetector(
+                    onTap: handleBookmark,
+                    child: Icon(Icons.bookmark, color: isBookmarked ? AppColors.primaryColor : AppColors.whiteColor),
+                  ),
+                )
+              : Container(),
         ],
         title: const Text(
           "Detail",

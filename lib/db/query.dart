@@ -319,41 +319,6 @@ Future<List<dynamic>> fetchIDsFromFirestore(String typeOfId) async {
   }
 }
 
-Future<void> addBookmarkItemToFirestore(Map<String, dynamic> bookmarkItem, String email, bool isEpisode) async {
-  try {
-    final QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
-
-    if (snapshot.docs.isNotEmpty) {
-      final DocumentSnapshot userDocument = snapshot.docs.first;
-
-      Map<String, dynamic>? documentData = userDocument.data() as Map<String, dynamic>?;
-
-      // If bookmarking a series, update the series in series_bookmark and if
-      // bookmarking an episode update the episode_bookmark.
-      String bookmarkListName = isEpisode ? "episodes_bookmark" : "series_bookmark";
-
-      if (documentData != null && documentData.containsKey(bookmarkListName)) {
-        List<dynamic> bookmarkedItemIdsData = documentData[bookmarkListName];
-
-        // Add the new bookmark item to the list.
-        bookmarkedItemIdsData.add(bookmarkItem);
-
-        // Update firestore with updated list of bookmark items.
-        await userDocument.reference.update({bookmarkListName: bookmarkedItemIdsData});
-        print("Bookmark item updated successfully.");
-
-        // Update Global series and episodes list. This will help us know
-        // what all series or episodes are already bookmarked by user.
-        Globals.userMetaData?[bookmarkListName].add(bookmarkItem);
-        print("Added data in local user meta data");
-      }
-    }
-  } catch (e) {
-    print('Error adding bookmark item: $e');
-  }
-}
-
 Future<List<dynamic>> getBookmarkDataFromDb(String email) async {
   try {
     final QuerySnapshot snapshot =
@@ -375,36 +340,112 @@ Future<List<dynamic>> getBookmarkDataFromDb(String email) async {
   return [];
 }
 
-Future<void> deleteBookmarkItemFromFirestore(dynamic bookmarkItem, String email, bool isEpisode) async {
+Future<void> addBookmarkItemToFirestore(int seriesId) async {
   try {
-    final QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('User-Data').where('email', isEqualTo: email).limit(1).get();
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('User-Data')
+        .where('email', isEqualTo: Globals.userEmail)
+        .limit(1)
+        .get();
 
     if (snapshot.docs.isNotEmpty) {
-      final DocumentSnapshot userDocument = snapshot.docs.first;
+      final DocumentSnapshot userDoc = snapshot.docs[0];
+      final List<dynamic>? seriesBookmark = userDoc['series_bookmark'];
 
-      // List<Map<String, dynamic>> currentBookmarkedItemIds = [];
-      Map<String, dynamic>? documentData = userDocument.data() as Map<String, dynamic>?;
-
-      // If series unbookmarked, then remove it from series list else episodes list.
-      String bookmarkListName = isEpisode ? "episodes_bookmark" : "series_bookmark";
-
-      if (documentData != null && documentData.containsKey(bookmarkListName)) {
-        List<dynamic> bookmarkedItemIdsData = documentData[bookmarkListName];
-
-        // Remove bookmark item from list of bookmarks from DB.
-        bookmarkedItemIdsData.removeWhere((map) => map["id"] == bookmarkItem["id"]);
-
-        await userDocument.reference.update({bookmarkListName: bookmarkedItemIdsData});
-        print('Bookmark item deleted successfully.');
-
-        // Update Global series and episodes list. This will help us know
-        // what all series or episodes are already bookmarked by user.
-        Globals.userMetaData?[bookmarkListName].removeWhere((map) => map["id"] == bookmarkItem["id"]);
-        print("Bookmark item deleted from local usermeta data.");
+      if (seriesBookmark == null || !seriesBookmark.contains(seriesId)) {
+        await userDoc.reference.update({
+          'series_bookmark': FieldValue.arrayUnion([seriesId]),
+        });
+      } else {
+        print('Series ID is already in bookmarks.');
       }
+    } else {
+      print('User not found.');
     }
   } catch (e) {
-    print('Error deleting bookmark item: $e');
+    print('Error: $e');
+  }
+}
+
+Future<void> deleteBookmarkItemFromFirestore(int seriesId) async {
+  try {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('User-Data')
+        .where('email', isEqualTo: Globals.userEmail)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final DocumentSnapshot userDoc = snapshot.docs[0];
+      final List<dynamic>? seriesBookmark = userDoc['series_bookmark'];
+
+      if (seriesBookmark != null && seriesBookmark.contains(seriesId)) {
+        await userDoc.reference.update({
+          'series_bookmark': FieldValue.arrayRemove([seriesId]),
+        });
+      } else {
+        print('Series ID not found in bookmarks.');
+      }
+    } else {
+      print('User not found.');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+Future<List<dynamic>> fetchBookmarkSeries() async {
+  try {
+    String currentUserEmail = Globals.userEmail;
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('User-Data')
+        .where('email', isEqualTo: currentUserEmail)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final DocumentSnapshot userDoc = snapshot.docs[0];
+      final List<dynamic>? seriesBookmark = userDoc['series_bookmark'];
+
+      if (seriesBookmark != null) {
+        Globals.bookmarkSeriesList = seriesBookmark;
+        return seriesBookmark;
+      } else {
+        return [];
+      }
+    } else {
+      return [];
+    }
+  } catch (e) {
+    print('Error: $e');
+    return [];
+  }
+}
+
+Future<List<dynamic>> fetchLikedEpisodes() async {
+  try {
+    String currentUserEmail = Globals.userEmail;
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('User-Data')
+        .where('email', isEqualTo: currentUserEmail)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final DocumentSnapshot userDoc = snapshot.docs[0];
+      final List<dynamic>? bookmarkedEpisodes = userDoc['episodes_bookmark'];
+
+      if (bookmarkedEpisodes != null) {
+        Globals.bookmarkedEpisodesList = bookmarkedEpisodes;
+        return bookmarkedEpisodes;
+      } else {
+        return [];
+      }
+    } else {
+      return [];
+    }
+  } catch (e) {
+    print('Error: $e');
+    return [];
   }
 }

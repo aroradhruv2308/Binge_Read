@@ -57,6 +57,10 @@ Future<void> initializeApp() async {
   if (Globals.userEmail != "") {
     // Get user episodes data from DB.
     var userData = await getUserData(Globals.userEmail);
+
+    // fetch the bookmarked series and episodes
+    await fetchBookmarkSeries();
+    await fetchLikedEpisodes();
     Globals.userMetaData = userData;
   }
 
