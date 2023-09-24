@@ -49,9 +49,10 @@ Widget seriesCard({
           style: const TextStyle(
             color: AppColors.whiteColor,
             fontFamily: "Lexend",
-            overflow: TextOverflow.ellipsis,
             fontSize: SizeConstants.fourteenPixel,
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(
           height: 5,

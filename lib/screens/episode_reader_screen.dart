@@ -69,7 +69,8 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
     episodeId = widget.episodes[widget.episodeNumber - 1].episodeId;
     totalEpisodes = widget.episodes.length;
 
-    isBookmarked = Globals.userMetaData?['episodes_bookmark'].any((map) => map['id'] == episodeId);
+    // isBookmarked = Globals.userMetaData?['episodes_bookmark'].any((map) => map['id'] == episodeId);
+    isBookmarked = false;
 
     // Adding listener to scroll event i.e. whenever user will
     // scroll on the reader screen we will update percent read.
