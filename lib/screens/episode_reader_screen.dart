@@ -54,7 +54,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
   late int pctRead;
   late String? episodeId;
   late int totalEpisodes;
-  bool isBookmarked = false;
+  bool isLiked = false;
 
   double fontSize = SizeConstants.twelvePixel;
   int currentMultiplierIndex = 1;
@@ -69,7 +69,7 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
     episodeId = widget.episodes[widget.episodeNumber - 1].episodeId;
     totalEpisodes = widget.episodes.length;
 
-    isBookmarked = Globals.userMetaData?['episodes_bookmark'].any((map) => map['id'] == episodeId);
+    isLiked = Globals.userMetaData?['episodes_bookmark'].any((map) => map['id'] == episodeId);
 
     // Adding listener to scroll event i.e. whenever user will
     // scroll on the reader screen we will update percent read.
@@ -142,7 +142,10 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
   }
 
   void handleLike() async {
-    //TODO: handle like button functionality here
+    toggleLike(isLiked, episodeId);
+    setState(() {
+      isLiked = !isLiked;
+    });
   }
 
   @override
@@ -155,8 +158,8 @@ class ReaderScreenState extends State<ReaderScreen> with WidgetsBindingObserver,
               GestureDetector(
                 onTap: handleLike,
                 child: Icon(
-                  Icons.bookmark,
-                  color: isBookmarked ? AppColors.primaryColor : AppColors.whiteColor,
+                  Icons.favorite,
+                  color: isLiked ? AppColors.pinkColor : AppColors.whiteColor,
                 ),
               ),
               const SizedBox(

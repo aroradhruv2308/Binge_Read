@@ -5,6 +5,7 @@ import 'package:binge_read/Utils/util_functions.dart';
 import 'package:binge_read/bloc/authentication_bloc/bloc/google_authentication_bloc.dart';
 import 'package:binge_read/components/bookmark_card.dart';
 import 'package:binge_read/components/custom_appbar.dart';
+import 'package:binge_read/components/ui_elements.dart';
 import 'package:binge_read/db/appDto.dart';
 import 'package:binge_read/models/models.dart';
 import 'package:flutter/material.dart';
@@ -48,16 +49,6 @@ class _BookmarkPageState extends State<BookmarkPage> {
               ),
               backgroundColor: AppColors.backgroundColor,
               elevation: 0,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_new_outlined,
-                  color: Colors.white,
-                  size: SizeConstants.eighteenPixel,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
             ),
             body: Globals.isLogin == true
                 ? FutureBuilder<List<dynamic>>(
@@ -67,19 +58,27 @@ class _BookmarkPageState extends State<BookmarkPage> {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(child: Text('No bookmarked items found.'));
                       } else {
-                        logger.e(snapshot.data);
-                        return Column(
-                          children: List.generate(snapshot.data?.length ?? 0, (index) {
-                            dynamic bookmarkItem = snapshot.data?[index];
-                            bool isEpisode = false;
-                            if (bookmarkItem[EPISODE_CODE] != null) {
-                              isEpisode = true;
-                            }
-                            if (isEpisode) {
-                            } else {}
-                            return bookmarkCard();
-                          }),
+                        List<dynamic>? seriesDataList = snapshot.data;
+                        // Generate a list of cards from the snapshot data
+                        return ListView.builder(
+                          itemCount: seriesDataList?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final data = seriesDataList?[index];
+                            final name = data['series_name'];
+                            final rating = data['rating'];
+                            final thumbnailUrl = data['Thumbnail URL'];
+                            final totalViews = data['total_views'];
+
+                            return SeriesCard(
+                              name: name,
+                              rating: rating.toDouble(),
+                              thumbnailUrl: thumbnailUrl,
+                              totalViews: totalViews,
+                            );
+                          },
                         );
                       }
                     },

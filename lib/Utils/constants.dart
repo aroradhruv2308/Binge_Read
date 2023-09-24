@@ -9,6 +9,7 @@ class AppColors {
   static const Color navBarColor = Color.fromRGBO(18, 20, 28, 1);
   static const Color dilogueBoxColor = Color.fromRGBO(21, 24, 33, 1);
   static const Color glowGreen = Color(0xffF2EAEBE);
+  static const Color pinkColor = Color(0xffFF6969);
 
   // Add more color constants as needed
 }

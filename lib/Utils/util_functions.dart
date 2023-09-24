@@ -104,17 +104,10 @@ List<dynamic> getCategoryList(String category, List<dynamic> series) {
   return processedList;
 }
 
-Future<List<dynamic>> getBookmarkData() async {
-  List<dynamic> bookmarkData = [];
-
-  // If user is logged in, Get Bookmark data from DB.
-  if (Globals.isLogin) {
-    bookmarkData = await getBookmarkDataFromDb(Globals.userEmail);
-    return bookmarkData;
-  }
-
-  // If user is not logged in, Get Data from Hive.
-  // bookmarkData = await Globals.userAppDataService.getBookmarkDataFromHive();
+Future<List<Map<String, dynamic>?>> getBookmarkData() async {
+  List<dynamic> bookmarkListIds = Globals.bookmarkSeriesList;
+  // will be fetching the data based upon the id of the series
+  List<Map<String, dynamic>?> bookmarkData = await fetchSeriesDataByIds(bookmarkListIds);
   return bookmarkData;
 }
 
@@ -132,5 +125,22 @@ void toggleBookmark(bool isBookmarked, dynamic id) async {
 
     //remove from local storage
     Globals.bookmarkSeriesList.remove(id);
+  }
+}
+
+void toggleLike(bool isBookmarked, dynamic id) async {
+  // user will be logged in state
+  if (!isBookmarked) {
+    //update database
+    addLikedItemToFirestore(id);
+
+    //add in local storage
+    Globals.bookmarkedEpisodesList.add(id);
+  } else {
+    //update database
+    deleteLikedItemFromFirestore(id);
+
+    //remove from local storage
+    Globals.bookmarkedEpisodesList.remove(id);
   }
 }

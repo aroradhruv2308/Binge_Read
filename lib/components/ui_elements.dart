@@ -9,6 +9,7 @@ import 'package:binge_read/screens/episode_reader_screen.dart';
 import 'package:blur/blur.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:readmore/readmore.dart';
 // ignore: depend_on_referenced_packages
@@ -526,6 +527,84 @@ class EpisodePercentIndicatorIcon extends StatelessWidget {
       progressColor: AppColors.greyColor,
       backgroundColor: AppColors.darkGreyColor,
       animation: true,
+    );
+  }
+}
+
+class SeriesCard extends StatelessWidget {
+  final String name;
+  final double rating;
+  final String thumbnailUrl;
+  final int totalViews;
+
+  SeriesCard({
+    required this.name,
+    required this.rating,
+    required this.thumbnailUrl,
+    required this.totalViews,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      margin: EdgeInsets.all(10.0),
+      color: AppColors.backgroundColor, // Set the background color
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: 120.0,
+            height: 120.0,
+            child: Image.network(
+              thumbnailUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(width: 10.0),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    name,
+                    style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.whiteColor,
+                        fontFamily: 'Lexend' // Set text color
+                        ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  RatingBarIndicator(
+                    rating: rating.toDouble(),
+                    itemBuilder: (context, index) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    itemCount: 5,
+                    itemSize: 30.0,
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    'Views: $totalViews',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'lexend',
+                      color: AppColors.greyColor, // Set text color
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

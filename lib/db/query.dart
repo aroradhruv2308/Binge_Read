@@ -394,6 +394,60 @@ Future<void> deleteBookmarkItemFromFirestore(int seriesId) async {
   }
 }
 
+Future<void> addLikedItemToFirestore(String episodeId) async {
+  try {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('User-Data')
+        .where('email', isEqualTo: Globals.userEmail)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final DocumentSnapshot userDoc = snapshot.docs[0];
+      final List<dynamic>? seriesBookmark = userDoc['episodes_bookmark'];
+
+      if (seriesBookmark == null || !seriesBookmark.contains(episodeId)) {
+        await userDoc.reference.update({
+          'episodes_bookmark': FieldValue.arrayUnion([episodeId]),
+        });
+      } else {
+        print('Series ID is already in bookmarks.');
+      }
+    } else {
+      print('User not found.');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+Future<void> deleteLikedItemFromFirestore(String episodeId) async {
+  try {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('User-Data')
+        .where('email', isEqualTo: Globals.userEmail)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final DocumentSnapshot userDoc = snapshot.docs[0];
+      final List<dynamic>? seriesBookmark = userDoc['episodes_bookmark'];
+
+      if (seriesBookmark != null && seriesBookmark.contains(episodeId)) {
+        await userDoc.reference.update({
+          'episodes_bookmark': FieldValue.arrayRemove([episodeId]),
+        });
+      } else {
+        print('Series ID not found in bookmarks.');
+      }
+    } else {
+      print('User not found.');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
 Future<List<dynamic>> fetchBookmarkSeries() async {
   try {
     String currentUserEmail = Globals.userEmail;
@@ -447,5 +501,27 @@ Future<List<dynamic>> fetchLikedEpisodes() async {
   } catch (e) {
     print('Error: $e');
     return [];
+  }
+}
+
+Future<List<Map<String, dynamic>?>> fetchSeriesDataByIds(List<dynamic> seriesIds) async {
+  CollectionReference seriesCollection = FirebaseFirestore.instance.collection('Series');
+
+  try {
+    QuerySnapshot seriesQuery = await seriesCollection.where("series_id", whereIn: seriesIds).get();
+    List<Map<String, dynamic>?> seriesDataList = [];
+
+    seriesQuery.docs.forEach((seriesSnapshot) {
+      if (seriesSnapshot.exists) {
+        seriesDataList.add(seriesSnapshot.data() as Map<String, dynamic>);
+      } else {
+        seriesDataList.add(null);
+      }
+    });
+
+    return seriesDataList;
+  } catch (error) {
+    print('Error fetching series data: $error');
+    return List.generate(seriesIds.length, (_) => null);
   }
 }
